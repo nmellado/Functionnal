@@ -46,6 +46,13 @@ struct Functional {
 
 
     inline
+    Functional(const std::array<Scalar, Dim*NbCoeff>& coeffArray)
+          : coeffs(coeffArray.data()){
+    }   // update with input param
+
+
+    //! \brief Init with default coefficients
+    inline
     void initCoeffs()
     {
         EvalBase::initCoeffs(coeffs);
@@ -105,6 +112,7 @@ struct FunctionalMapBase {
         return Functional<EvalBase>(coeffs);
     }
 
+    //! \brief Init with default coefficients
     inline
     void initCoeffs()
     { EvalBase::initCoeffs(coeffs); }

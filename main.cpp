@@ -7,6 +7,7 @@
 */
 
 #include <iostream>
+#include <fstream>
 #include <Eigen/Dense>
 
 #include "functional.h"
@@ -15,7 +16,7 @@
 namespace Test_Bezier{
 typedef double Scalar;
 enum{Dim=2};
-enum{Degree=5};
+enum{Degree=2};
 
 typedef functional::Bezier<Scalar, Degree, Dim> BezierCurve;
 typedef functional::BezierMap<Scalar, Degree, Dim> BezierMap;
@@ -27,76 +28,89 @@ typedef functional::ConstrainedBezierMap<Scalar, Degree+2, Dim> ConstrBezierMap;
 int main(int /*argc*/, char */*argv*/[])
 {
     using namespace Test_Bezier;
+    using namespace std;
 
     const int nbSample = 100;
 
-    // build a first bezier curve
-    BezierCurve bezier;
-    bezier.coeffs = BezierCurve::CoeffType::Random();
+    ofstream filebuf;
 
-    bezier.initCoeffs();
+    // build a random bezier curve
+    //BezierCurve bezier (BezierCurve::CoeffType::Random());
+    BezierCurve bezier ( {
+                             0.25, 1.0 ,
+                             0.50, 0.25,
+                             0.75, 1.0
+                         } );
 
-    std::cout<<"Control points" << std::endl;
-    std::cout << bezier << std::endl;
+    // create a new bezier curve from the first one, sharing the same memory,
+    // with two extra end-points in (0,0) and (1,1)
+    ConstrBezierMap cBezier ( bezier.coeffs.data() );
+    cBezier.startPoint << 0.0, 0.0;
+    cBezier.endPoint   << 1.0, 0.0;
 
+
+    filebuf.open ("control0.txt");
+    filebuf << "# Random control points \n"
+            << "# x y " << std::endl;
+    filebuf << bezier << std::endl;
+    filebuf.close();
+
+    filebuf.open ("control1.txt");
+    filebuf << "# Constrained + Random control points \n"
+            << "# x y " << std::endl;
+    filebuf << cBezier << std::endl;
+    filebuf.close();
+
+
+
+    filebuf.open ("curves.txt");
     {
-        std::cout<<"Unconstrained curve" << std::endl;
-        BezierCurve::EmbeddedVectorType input;
-        BezierCurve::EmbeddingVectorType result;
+        filebuf<<"#x0 y0 x1 y1" << std::endl;
+        ConstrBezierMap::EmbeddedVectorType input;
 
         for (int t = 0; t != nbSample; ++t){
             input << Scalar(t)/Scalar(nbSample-1);
-            result = bezier.eval( input );
 
-            std::cout << result.transpose() << std::endl;
+            filebuf << bezier.eval( input ).transpose() << " "
+                    << cBezier.eval( input ).transpose() << std::endl;
         }
     }
-
-
-    // extend using a constrained BezierMap
-    ConstrBezierMap cBezier ( bezier.coeffs.data() );
-    cBezier.startPoint << 0.0, 0.0;
-    cBezier.endPoint   << 1.0, 1.0;
-
-
-    std::cout<<"Constrained control points" << std::endl;
-    std::cout << cBezier << std::endl;
-
-    {
-//        std::cout<<"Constrained curve" << std::endl;
-//        ConstrBezierMap::EmbeddedVectorType input;
-//        ConstrBezierMap::EmbeddingVectorType result;
-
-//        for (int t = 0; t != nbSample; ++t){
-//            input << Scalar(t)/Scalar(nbSample-1);
-//            result = cBezier.eval( input );
-
-//            std::cout << result.transpose() << std::endl;
-//        }
-    }
+    filebuf.close();
 
     // test map to object conversion
-    BezierMap bezierMap ( bezier.coeffs.data() );
-    BezierCurve cBezierCopy = bezierMap.asFunctional();
+    BezierMap bezierMap ( bezier.coeffs.data() );       // changes in bezier will affect bezierMap
+    BezierCurve cBezierCopy = bezierMap.asFunctional(); // duplicate memory: objects are independants
     std::cout << "Autonomous copy of Constrained control points"<<std::endl;
     std::cout << cBezierCopy << std::endl;
 
-    // test derivative computation
-    BezierCurve::Derivative bezierDer = cBezierCopy.derivative();
-    std::cout << "Derivative"<<std::endl;
-    std::cout << bezierDer << std::endl;
+    // compute bezier hodograph
+    BezierCurve::Derivative bezierDer = bezier.derivative();
+    filebuf.open ("hcontrol0.txt");
+    filebuf << "# Hodograph0"<<std::endl;
+    filebuf << bezierDer << std::endl;
+    filebuf.close();
 
-    // compute stretch
+    // compute constrained bezier hodograph
+    ConstrBezierMap::Derivative cBezierDer = cBezier.derivative();
+    filebuf.open ("hcontrol1.txt");
+    filebuf << "# Hodograph1"<<std::endl;
+    filebuf << cBezierDer << std::endl;
+    filebuf.close();
+
+    // compute stretch of cBezierCopy using its derivative
+    filebuf.open ("hodographs.txt");
     {
-        std::cout<<"Bezier curve stretch" << std::endl;
+        filebuf<<"# Bezier curve stretch" << std::endl;
         ConstrBezierMap::EmbeddedVectorType input;
-        ConstrBezierMap::EmbeddingVectorType result;
 
         for (int t = 0; t != nbSample; ++t){
             input << Scalar(t)/Scalar(nbSample-1);
-            std::cout << input(0) << " " << bezierDer.eval( input ).norm() << std::endl;
+
+            filebuf << bezierDer.eval( input ).transpose() << " "
+                    << cBezierDer.eval( input ).transpose() << std::endl;
         }
     }
+    filebuf.close();
 
     return EXIT_SUCCESS;
 }
