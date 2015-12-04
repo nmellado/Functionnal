@@ -6,18 +6,18 @@
     \author Nicolas Mellado nmellado0@gmail.com
 */
 
-#ifndef FUNCTIONNAL_H
-#define FUNCTIONNAL_H
+#ifndef FUNCTIONAL_H
+#define FUNCTIONAL_H
 
 #include <Eigen/Core>
 
-namespace Functionnal{
+namespace Functional{
 
 /*!
- *\brief Helper class storing the memory used by the Functionnal
+ *\brief Helper class defining a Functional object storing its own memory
  */
 template < typename _EvalBase >
-struct Functionnal {
+struct Functional {
     typedef _EvalBase EvalBase;
     typedef typename EvalBase::Scalar Scalar;
     enum{
@@ -27,7 +27,7 @@ struct Functionnal {
     typedef typename EvalBase::EmbeddedVectorType EmbeddedVectorType;
     typedef typename EvalBase::EmbeddingVectorType EmbeddingVectorType;
     typedef typename EvalBase::CoeffType CoeffType;
-    typedef Functionnal<typename EvalBase::Derivative> Derivative;
+    typedef Functional<typename EvalBase::Derivative> Derivative;
 
     //! Actual storage of the coefficients
     CoeffType coeffs;
@@ -35,12 +35,12 @@ struct Functionnal {
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     inline
-    Functionnal(){ }
+    Functional(){ }
 
 
     template <typename Derived>
     inline
-    Functionnal(const Eigen::MatrixBase<Derived>& otherCoeffs)
+    Functional(const Eigen::MatrixBase<Derived>& otherCoeffs)
           : coeffs(otherCoeffs){
     }   // update with input param
 
@@ -57,7 +57,7 @@ struct Functionnal {
     }
 
     /*!
-     * \brief Build and return de derivative of the Functionnal
+     * \brief Build and return de derivative of the Functional
      */
     inline
     Derivative derivative() const {
@@ -75,11 +75,11 @@ public:
 
 namespace internal{
 /*!
- *\brief Helper class storing the memory used by the Polynomial
+ *\brief Helper class defining a Functional object using external memory
  */
 template <typename _EvalBase,
           template <typename> class MapType >
-struct FunctionnalMapBase {
+struct FunctionalMapBase {
 
     typedef _EvalBase EvalBase;
     typedef typename EvalBase::Scalar Scalar;
@@ -90,19 +90,19 @@ struct FunctionnalMapBase {
     typedef typename EvalBase::EmbeddedVectorType EmbeddedVectorType;
     typedef typename EvalBase::EmbeddingVectorType EmbeddingVectorType;
     typedef typename EvalBase::CoeffType CoeffType;
-    typedef Functionnal<typename EvalBase::Derivative> Derivative;
+    typedef Functional<typename EvalBase::Derivative> Derivative;
 
     //! Map to the actual coefficients
     MapType<CoeffType> coeffs;
 
 
-    inline FunctionnalMapBase(Scalar* data)
+    inline FunctionalMapBase(Scalar* data)
         :coeffs(data){}
-    inline FunctionnalMapBase(const Scalar* data)
+    inline FunctionalMapBase(const Scalar* data)
         :coeffs(data){}
 
-    inline Functionnal<EvalBase> asFunctionnal() const{
-        return Functionnal<EvalBase>(coeffs);
+    inline Functional<EvalBase> asFunctional() const{
+        return Functional<EvalBase>(coeffs);
     }
 
     inline
@@ -114,7 +114,7 @@ struct FunctionnalMapBase {
         return EvalBase::staticEval(x, coeffs);
     }
 
-    //! Build and return de derivative of the FunctionnalMap as Functionnal
+    //! Build and return de derivative of the FunctionalMap as Functional
     inline
     Derivative derivative() const {
         return EvalBase::derivative(coeffs);
@@ -132,55 +132,55 @@ template<class T> using Map      = Eigen::Map<T>;
 template<class T> using ConstMap = const Eigen::Map<const T>;
 
 } // namespace internal
-} // namespace Functionnal
+} // namespace Functional
 
 ////////////////////////////////////////////////////////////////////////////////
 // Predefined types
 
-#include "functionnalEvalFunc.h"
+#include "functionalEvalFunc.h"
 
 
-namespace Functionnal{
-
-template<typename _EvalBase>
-using FunctionnalMap =
-internal::FunctionnalMapBase<_EvalBase, internal::Map >;
+namespace Functional{
 
 template<typename _EvalBase>
-using ConstFunctionnalMap =
-internal::FunctionnalMapBase<_EvalBase, internal::ConstMap >;
+using FunctionalMap =
+internal::FunctionalMapBase<_EvalBase, internal::Map >;
+
+template<typename _EvalBase>
+using ConstFunctionalMap =
+internal::FunctionalMapBase<_EvalBase, internal::ConstMap >;
 
 
 
 // Polynomial typedefs
 template<typename _Scalar, int _Degree, int _Dim>
 using Polynomial =
-Functionnal< PolynomialEvalFunc< _Scalar, _Degree, _Dim > >;
+Functional< PolynomialEvalFunc< _Scalar, _Degree, _Dim > >;
 
 template<typename _Scalar, int _Degree, int _Dim>
 using PolynomialMap =
-FunctionnalMap< PolynomialEvalFunc< _Scalar, _Degree, _Dim > >;
+FunctionalMap< PolynomialEvalFunc< _Scalar, _Degree, _Dim > >;
 
 template<typename _Scalar, int _Degree, int _Dim>
 using ConstPolynomialMap =
-ConstFunctionnalMap< PolynomialEvalFunc< _Scalar, _Degree, _Dim > >;
+ConstFunctionalMap< PolynomialEvalFunc< _Scalar, _Degree, _Dim > >;
 
 
 // Bezier typedefs
 template<typename _Scalar, int _Degree, int _Dim>
 using Bezier =
-Functionnal< BezierBinomialEvalFunc< _Scalar, _Degree, _Dim > >;
+Functional< BezierBinomialEvalFunc< _Scalar, _Degree, _Dim > >;
 
 template<typename _Scalar, int _Degree, int _Dim>
 using BezierMap =
-FunctionnalMap< BezierBinomialEvalFunc< _Scalar, _Degree, _Dim > >;
+FunctionalMap< BezierBinomialEvalFunc< _Scalar, _Degree, _Dim > >;
 
 template<typename _Scalar, int _Degree, int _Dim>
 using ConstBezierMap =
-ConstFunctionnalMap< BezierBinomialEvalFunc< _Scalar, _Degree, _Dim > >;
+ConstFunctionalMap< BezierBinomialEvalFunc< _Scalar, _Degree, _Dim > >;
 
-} // namespace Functionnal
+} // namespace Functional
 
-#include "functionnal.hpp"
+#include "functional.hpp"
 
-#endif // FUNCTIONNAL_H
+#endif // FUNCTIONAL_H

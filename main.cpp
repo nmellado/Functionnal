@@ -9,7 +9,7 @@
 #include <iostream>
 #include <Eigen/Dense>
 
-#include "functionnal.h"
+#include "functional.h"
 #include "constrainedBezier.h"
 
 namespace Test_Bezier{
@@ -17,9 +17,9 @@ typedef double Scalar;
 enum{Dim=2};
 enum{Degree=5};
 
-typedef Functionnal::Bezier<Scalar, Degree, Dim> BezierCurve;
-typedef Functionnal::BezierMap<Scalar, Degree, Dim> BezierMap;
-typedef Functionnal::ConstrainedBezierMap<Scalar, Degree+2, Dim> ConstrBezierMap;
+typedef Functional::Bezier<Scalar, Degree, Dim> BezierCurve;
+typedef Functional::BezierMap<Scalar, Degree, Dim> BezierMap;
+typedef Functional::ConstrainedBezierMap<Scalar, Degree+2, Dim> ConstrBezierMap;
 
 }
 
@@ -77,7 +77,7 @@ int main(int /*argc*/, char */*argv*/[])
 
     // test map to object conversion
     BezierMap bezierMap ( bezier.coeffs.data() );
-    BezierCurve cBezierCopy = bezierMap.asFunctionnal();
+    BezierCurve cBezierCopy = bezierMap.asFunctional();
     std::cout << "Autonomous copy of Constrained control points"<<std::endl;
     std::cout << cBezierCopy << std::endl;
 

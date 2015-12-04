@@ -6,14 +6,14 @@
     \author Nicolas Mellado nmellado0@gmail.com
 */
 
-#ifndef FUNCTIONNAL_EVAL_FUNC_H
-#define FUNCTIONNAL_EVAL_FUNC_H
+#ifndef Functional_EVAL_FUNC_H
+#define Functional_EVAL_FUNC_H
 
 #include <Eigen/Core>
 #include "common.h"
 #include <iostream>
 
-namespace Functionnal{
+namespace Functional{
 /*!
  * \brief Base class used to evaluate a polynomial function of arbitrary degree
  * in n dimension. Here embedding and embedded spaces share the same dimensions.
@@ -414,4 +414,4 @@ private:
 };
 
 }
-#endif // FUNCTIONNAL_EVAL_FUNC_H
+#endif // Functional_EVAL_FUNC_H

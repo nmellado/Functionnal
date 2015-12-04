@@ -6,27 +6,27 @@
     \author Nicolas Mellado nmellado0@gmail.com
 */
 
-#ifndef FUNCTIONNAL_HPP
-#define FUNCTIONNAL_HPP
+#ifndef FUNCTIONAL_HPP
+#define FUNCTIONAL_HPP
 
 // The following directive is used only to get code completion and doesn't pass
 // the pre-compilation stage.
-#ifndef FUNCTIONNAL_H
-#include "functionnal.h"
+#ifndef Functional_H
+#include "functional.h"
 #endif
 
-namespace Functionnal{
+namespace Functional{
 namespace internal{
 } // namespace internal
-} // namespace Functionnal
+} // namespace Functional
 
 template <class StreamT,
           typename _EvalBase,
           template <typename> class _MapType>
 inline
 StreamT& operator<< (StreamT& stream,
-                     const Functionnal::internal::
-                     FunctionnalMapBase<_EvalBase, _MapType> &p){
+                     const Functional::internal::
+                     FunctionalMapBase<_EvalBase, _MapType> &p){
     p.print(stream);
     return stream;
 }
@@ -35,11 +35,11 @@ template <class StreamT,
           typename _EvalBase>
 inline
 StreamT& operator<< (StreamT& stream,
-                     const Functionnal::
-                     Functionnal<_EvalBase> &p){
+                     const Functional::
+                     Functional<_EvalBase> &p){
     p.print(stream);
     return stream;
 }
 
 
-#endif // FUNCTIONNAL_HPP
+#endif // FUNCTIONAL_HPP

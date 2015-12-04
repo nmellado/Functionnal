@@ -9,12 +9,12 @@
 #ifndef CONSTRAINEDBEZIER_H
 #define CONSTRAINEDBEZIER_H
 
-#include "functionnal.h"
+#include "functional.h"
 
 #include <iostream>
 
 
-namespace Functionnal{
+namespace Functional{
 
 namespace internal{
 
@@ -54,7 +54,7 @@ public:
     typedef typename EvalBase::EmbeddedVectorType EmbeddedVectorType;
     typedef typename EvalBase::EmbeddingVectorType EmbeddingVectorType;
     typedef typename ConstrainedEvalBase::CoeffType CoeffType;
-    typedef Functionnal<_EvalFuncT < Scalar,
+    typedef Functional<_EvalFuncT < Scalar,
                                      EvalBase::Derivative::Degree,
                                      EvalBase::Derivative::Dim> > Derivative;
 
@@ -106,7 +106,7 @@ public:
     }
 
     /*!
-     * \brief Build and return de derivative of the Functionnal
+     * \brief Build and return de derivative of the Functional
      */
     inline
     Derivative derivative() const {
@@ -265,7 +265,7 @@ template<typename _Scalar, int _Degree, int _Dim>
 using ConstConstrainedRationnalBezierMap =
 internal::ConstrainedBezierMapBase< _Scalar, _Degree, _Dim, RationnalBezierEvalFunc, internal::ConstMap >;
 
-} // namespace Functionnal
+} // namespace Functional
 
 
 template <class StreamT,
@@ -274,7 +274,7 @@ template <class StreamT,
           template <typename> class _MapT>
 inline
 StreamT& operator<< (StreamT& stream,
-                     const Functionnal::internal::
+                     const Functional::internal::
                      ConstrainedBezierMapBase<_S,_De,_Di,_EvalFuncT,_MapT> &p){
     p.print(stream);
     return stream;
