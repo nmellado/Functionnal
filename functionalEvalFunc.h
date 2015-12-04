@@ -13,7 +13,7 @@
 #include "common.h"
 #include <iostream>
 
-namespace Functional{
+namespace functional{
 /*!
  * \brief Base class used to evaluate a polynomial function of arbitrary degree
  * in n dimension. Here embedding and embedded spaces share the same dimensions.

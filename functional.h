@@ -11,7 +11,7 @@
 
 #include <Eigen/Core>
 
-namespace Functional{
+namespace functional{
 
 /*!
  *\brief Helper class defining a Functional object storing its own memory
@@ -140,7 +140,7 @@ template<class T> using ConstMap = const Eigen::Map<const T>;
 #include "functionalEvalFunc.h"
 
 
-namespace Functional{
+namespace functional{
 
 template<typename _EvalBase>
 using FunctionalMap =

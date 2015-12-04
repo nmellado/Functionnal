@@ -15,7 +15,7 @@
 #include "functional.h"
 #endif
 
-namespace Functional{
+namespace functional{
 namespace internal{
 } // namespace internal
 } // namespace Functional
@@ -25,7 +25,7 @@ template <class StreamT,
           template <typename> class _MapType>
 inline
 StreamT& operator<< (StreamT& stream,
-                     const Functional::internal::
+                     const functional::internal::
                      FunctionalMapBase<_EvalBase, _MapType> &p){
     p.print(stream);
     return stream;
@@ -35,7 +35,7 @@ template <class StreamT,
           typename _EvalBase>
 inline
 StreamT& operator<< (StreamT& stream,
-                     const Functional::
+                     const functional::
                      Functional<_EvalBase> &p){
     p.print(stream);
     return stream;

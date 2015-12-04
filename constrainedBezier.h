@@ -14,7 +14,7 @@
 #include <iostream>
 
 
-namespace Functional{
+namespace functional{
 
 namespace internal{
 
@@ -274,7 +274,7 @@ template <class StreamT,
           template <typename> class _MapT>
 inline
 StreamT& operator<< (StreamT& stream,
-                     const Functional::internal::
+                     const functional::internal::
                      ConstrainedBezierMapBase<_S,_De,_Di,_EvalFuncT,_MapT> &p){
     p.print(stream);
     return stream;

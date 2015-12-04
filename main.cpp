@@ -17,9 +17,9 @@ typedef double Scalar;
 enum{Dim=2};
 enum{Degree=5};
 
-typedef Functional::Bezier<Scalar, Degree, Dim> BezierCurve;
-typedef Functional::BezierMap<Scalar, Degree, Dim> BezierMap;
-typedef Functional::ConstrainedBezierMap<Scalar, Degree+2, Dim> ConstrBezierMap;
+typedef functional::Bezier<Scalar, Degree, Dim> BezierCurve;
+typedef functional::BezierMap<Scalar, Degree, Dim> BezierMap;
+typedef functional::ConstrainedBezierMap<Scalar, Degree+2, Dim> ConstrBezierMap;
 
 }
 
