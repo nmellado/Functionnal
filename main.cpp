@@ -10,17 +10,17 @@
 #include <fstream>
 #include <Eigen/Dense>
 
-#include "functionnal.h"
-#include "constrainedBezier.h"
+#include "Functionnal/functionnal.h"
+#include "Functionnal/constrainedBezier.h"
 
 namespace Test_Bezier{
 typedef double Scalar;
 enum{Dim=2};
 enum{Degree=3};
 
-typedef functionnal::Bezier<Scalar, Degree, Dim> BezierCurve;
-typedef functionnal::BezierMap<Scalar, Degree, Dim> BezierMap;
-typedef functionnal::ConstrainedBezierMap<Scalar, Degree+2, Dim> ConstrBezierMap;
+typedef Functionnal::Bezier<Scalar, Degree, Dim> BezierCurve;
+typedef Functionnal::BezierMap<Scalar, Degree, Dim> BezierMap;
+typedef Functionnal::ConstrainedBezierMap<Scalar, Degree+2, Dim> ConstrBezierMap;
 
 }
 

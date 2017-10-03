@@ -8,12 +8,12 @@
 
 #pragma once
 
-#include "functionnal.h"
+#include "Functionnal/functionnal.h"
 
 #include <iostream>
 
 
-namespace functionnal{
+namespace Functionnal{
 
 namespace internal{
 
@@ -273,7 +273,7 @@ template <class StreamT,
           template <typename> class _MapT>
 inline
 StreamT& operator<< (StreamT& stream,
-                     const functionnal::internal::
+                     const Functionnal::internal::
                      ConstrainedBezierMapBase<_S,_De,_Di,_EvalFuncT,_MapT> &p){
     p.print(stream);
     return stream;

@@ -10,7 +10,7 @@
 
 #include <Eigen/Core>
 
-namespace functionnal{
+namespace Functionnal{
 
 /*!
  *\brief Helper class defining a Functionnal object storing its own memory
@@ -144,10 +144,10 @@ template<class T> using ConstMap = const Eigen::Map<const T>;
 ////////////////////////////////////////////////////////////////////////////////
 // Predefined types
 
-#include "functionnalEvalFunc.h"
+#include "Functionnal/functionnalEvalFunc.h"
 
 
-namespace functionnal{
+namespace Functionnal{
 
 template<typename _EvalBase>
 using FunctionnalMap =
@@ -188,5 +188,5 @@ ConstFunctionnalMap< BezierBinomialEvalFunc< _Scalar, _Degree, _Dim > >;
 
 } // namespace Functionnal
 
-#include "functionnal.hpp"
+#include "Functionnal/functionnal.hpp"
 

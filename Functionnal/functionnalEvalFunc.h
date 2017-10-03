@@ -9,10 +9,10 @@
 #pragma once
 
 #include <Eigen/Core>
-#include "common.h"
+#include "Functionnal/common.h"
 #include <iostream>
 
-namespace functionnal{
+namespace Functionnal{
 /*!
  * \brief Base class used to evaluate a polynomial function of arbitrary degree
  * in n dimension. Here embedding and embedded spaces share the same dimensions.

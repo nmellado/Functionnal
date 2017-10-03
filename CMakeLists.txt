@@ -6,8 +6,9 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 
 set (ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 
-file (GLOB_RECURSE HEADER ${ROOT}/*.h)
-file (GLOB_RECURSE IMPL ${ROOT}/*.hpp)
+include_directories(${ROOT})
+file (GLOB_RECURSE HEADER ${ROOT}/Functionnal/*.h)
+file (GLOB_RECURSE IMPL ${ROOT}/Functionnal/*.hpp)
 
 set (SRC_bezier     ${ROOT}/main.cpp )
 

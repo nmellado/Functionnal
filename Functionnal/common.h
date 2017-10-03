@@ -12,6 +12,7 @@
 #include <cmath>
 
 
+namespace Functionnal {
 namespace Utils{
 
 //! \brief Compile time pow
@@ -67,4 +68,5 @@ template<int Size, int i, int... j> struct S<Size, i,j...>
 template<int Size> struct Row : public internal::S<Size, Size>{};
 
 }
-}
+} // namespace utils
+} // namespace functionnal

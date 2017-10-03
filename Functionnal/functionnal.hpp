@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "functionnal.h"
+#include "Functionnal/functionnal.h"
 
-namespace functionnal{
+namespace Functionnal{
 namespace internal{
 } // namespace internal
 } // namespace Functionnal
@@ -20,7 +20,7 @@ template <class StreamT,
           template <typename> class _MapType>
 inline
 StreamT& operator<< (StreamT& stream,
-                     const functionnal::internal::
+                     const Functionnal::internal::
                      FunctionnalMapBase<_EvalBase, _MapType> &p){
     p.print(stream);
     return stream;
@@ -30,7 +30,7 @@ template <class StreamT,
           typename _EvalBase>
 inline
 StreamT& operator<< (StreamT& stream,
-                     const functionnal::
+                     const Functionnal::
                      Functionnal<_EvalBase> &p){
     p.print(stream);
     return stream;
