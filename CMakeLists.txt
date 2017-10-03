@@ -14,7 +14,7 @@ set (GNUPLOT ${ROOT}/trace.plot )
 
 list( APPEND CMAKE_CXX_FLAGS "-std=c++11 -fPIC -Wall -Wpedantic -Wextra")
 
-add_custom_target( install_res
+add_custom_target( functionnal_copy_gnuplot_files
     COMMAND ${CMAKE_COMMAND} -E copy ${GNUPLOT} ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "Copying gnuplot script to build dir" VERBATIM
     DEPENDS ${GNUPLOT}
@@ -23,5 +23,5 @@ add_custom_target( install_res
 set (DEMOS_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/demos)
 
 add_executable (bezier ${DEMOS_ROOT}/bezier.cpp ${HEADER} ${IMPL})
-add_dependencies( bezier install_res)
+add_dependencies( bezier functionnal_copy_gnuplot_files)
 
