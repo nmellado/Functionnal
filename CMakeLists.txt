@@ -4,14 +4,12 @@ cmake_minimum_required (VERSION 3.2)
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
-set (ROOT ${CMAKE_CURRENT_SOURCE_DIR})
+set (FUNCTIONNAL_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
-set (FUNCTIONNAL_DIRECTORY ${ROOT}/Functionnal)
+file (GLOB_RECURSE HEADER ${FUNCTIONNAL_DIRECTORY}/Functionnal/*.h)
+file (GLOB_RECURSE IMPL ${FUNCTIONNAL_DIRECTORY}/Functionnal/*.hpp)
 
-file (GLOB_RECURSE HEADER ${FUNCTIONNAL_DIRECTORY}/*.h)
-file (GLOB_RECURSE IMPL ${FUNCTIONNAL_DIRECTORY}/*.hpp)
-
-set (GNUPLOT ${ROOT}/trace.plot )
+set (GNUPLOT ${FUNCTIONNAL_DIRECTORY}/trace.plot )
 
 set (CMAKE_CXX_STANDARD 11)
 
@@ -27,6 +25,7 @@ set (DEMOS_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/demos)
 
 add_library( functionnal INTERFACE )
 target_sources( functionnal INTERFACE ${HEADER} ${IMPL} )
+target_include_directories ( functionnal INTERFACE ${FUNCTIONNAL_DIRECTORY} )
 
 add_executable (bezier ${DEMOS_ROOT}/bezier.cpp )
 add_dependencies( bezier functionnal functionnal_copy_gnuplot_files )
