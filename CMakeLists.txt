@@ -10,9 +10,6 @@ include_directories(${ROOT})
 file (GLOB_RECURSE HEADER ${ROOT}/Functionnal/*.h)
 file (GLOB_RECURSE IMPL ${ROOT}/Functionnal/*.hpp)
 
-set (SRC_bezier     ${ROOT}/main.cpp )
-
-
 set (GNUPLOT ${ROOT}/trace.plot )
 
 list( APPEND CMAKE_CXX_FLAGS "-std=c++11 -fPIC -Wall -Wpedantic -Wextra")
@@ -20,12 +17,11 @@ list( APPEND CMAKE_CXX_FLAGS "-std=c++11 -fPIC -Wall -Wpedantic -Wextra")
 add_custom_target( install_res
     COMMAND ${CMAKE_COMMAND} -E copy ${GNUPLOT} ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "Copying gnuplot script to build dir" VERBATIM
-    #FOREACH (RES IN LISTS ${RES_FILES})
-    #COMMAND message(STATUS Installing ${RES_FILES})
-        #COMMAND ${CMAKE_COMMAND} -E copy ${RES} ${CMAKE_CURRENT_BINARY_DIR}
-    #ENDFOREACH (RES)
+    DEPENDS ${GNUPLOT}
 )
 
-add_executable (bezier ${SRC_bezier} ${HEADER} ${IMPL} ${GNUPLOT})
+set (DEMOS_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/demos)
+
+add_executable (bezier ${DEMOS_ROOT}/bezier.cpp ${HEADER} ${IMPL})
 add_dependencies( bezier install_res)
 
