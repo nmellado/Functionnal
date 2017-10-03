@@ -1,13 +1,12 @@
 /*
-    This Source Code Form is subject to the terms of the 
-    Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed 
+    This Source Code Form is subject to the terms of the
+    Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed
     with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
-    
+
     \author Nicolas Mellado nmellado0@gmail.com
 */
 
-#ifndef COMMON_H
-#define COMMON_H
+#pragma once
 
 #include <array>
 #include <cmath>
@@ -69,5 +68,3 @@ template<int Size> struct Row : public internal::S<Size, Size>{};
 
 }
 }
-
-#endif

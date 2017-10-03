@@ -1,20 +1,19 @@
 /*
-    This Source Code Form is subject to the terms of the 
-    Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed 
+    This Source Code Form is subject to the terms of the
+    Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed
     with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
-    
+
     \author Nicolas Mellado nmellado0@gmail.com
 */
 
-#ifndef CONSTRAINEDBEZIER_H
-#define CONSTRAINEDBEZIER_H
+#pragma once
 
-#include "functional.h"
+#include "functionnal.h"
 
 #include <iostream>
 
 
-namespace functional{
+namespace functionnal{
 
 namespace internal{
 
@@ -54,7 +53,7 @@ public:
     typedef typename EvalBase::EmbeddedVectorType EmbeddedVectorType;
     typedef typename EvalBase::EmbeddingVectorType EmbeddingVectorType;
     typedef typename ConstrainedEvalBase::CoeffType CoeffType;
-    typedef Functional<_EvalFuncT < Scalar,
+    typedef Functionnal<_EvalFuncT < Scalar,
                                      EvalBase::Derivative::Degree,
                                      EvalBase::Derivative::Dim> > Derivative;
 
@@ -106,7 +105,7 @@ public:
     }
 
     /*!
-     * \brief Build and return de derivative of the Functional
+     * \brief Build and return de derivative of the Functionnal
      */
     inline
     Derivative derivative() const {
@@ -265,7 +264,7 @@ template<typename _Scalar, int _Degree, int _Dim>
 using ConstConstrainedRationnalBezierMap =
 internal::ConstrainedBezierMapBase< _Scalar, _Degree, _Dim, RationnalBezierEvalFunc, internal::ConstMap >;
 
-} // namespace Functional
+} // namespace Functionnal
 
 
 template <class StreamT,
@@ -274,13 +273,10 @@ template <class StreamT,
           template <typename> class _MapT>
 inline
 StreamT& operator<< (StreamT& stream,
-                     const functional::internal::
+                     const functionnal::internal::
                      ConstrainedBezierMapBase<_S,_De,_Di,_EvalFuncT,_MapT> &p){
     p.print(stream);
     return stream;
 }
 
 
-
-
-#endif // CONSTRAINEDBEZIER_H

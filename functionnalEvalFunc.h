@@ -1,19 +1,18 @@
 /*
-    This Source Code Form is subject to the terms of the 
-    Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed 
+    This Source Code Form is subject to the terms of the
+    Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed
     with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
-    
+
     \author Nicolas Mellado nmellado0@gmail.com
 */
 
-#ifndef Functional_EVAL_FUNC_H
-#define Functional_EVAL_FUNC_H
+#pragma once
 
 #include <Eigen/Core>
 #include "common.h"
 #include <iostream>
 
-namespace functional{
+namespace functionnal{
 /*!
  * \brief Base class used to evaluate a polynomial function of arbitrary degree
  * in n dimension. Here embedding and embedded spaces share the same dimensions.
@@ -414,4 +413,3 @@ private:
 };
 
 }
-#endif // Functional_EVAL_FUNC_H

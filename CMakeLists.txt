@@ -1,4 +1,4 @@
-project(Interpo-Apps)
+project(Functionnal)
 cmake_minimum_required (VERSION 2.8)
 
 find_package(Eigen3 REQUIRED)
@@ -6,12 +6,10 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 
 set (ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 
-set (HEADER  ${ROOT}/common.h
-             ${ROOT}/functional.h
-             ${ROOT}/constrainedBezier.h
-             ${ROOT}/functionalEvalFunc.h )
-set (IMPL    ${ROOT}/functional.hpp )
-set (SRC     ${ROOT}/main.cpp )
+file (GLOB_RECURSE HEADER ${ROOT}/*.h)
+file (GLOB_RECURSE IMPL ${ROOT}/*.hpp)
+
+set (SRC_bezier     ${ROOT}/main.cpp )
 
 
 set (GNUPLOT ${ROOT}/trace.plot )
@@ -27,6 +25,6 @@ add_custom_target( install_res
     #ENDFOREACH (RES)
 )
 
-add_executable (bezier ${SRC} ${HEADER} ${IMPL} ${GNUPLOT})
+add_executable (bezier ${SRC_bezier} ${HEADER} ${IMPL} ${GNUPLOT})
 add_dependencies( bezier install_res)
 

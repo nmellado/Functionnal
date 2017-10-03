@@ -1,23 +1,22 @@
 /*
-    This Source Code Form is subject to the terms of the 
-    Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed 
+    This Source Code Form is subject to the terms of the
+    Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed
     with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
-    
+
     \author Nicolas Mellado nmellado0@gmail.com
 */
 
-#ifndef FUNCTIONAL_H
-#define FUNCTIONAL_H
+#pragma once
 
 #include <Eigen/Core>
 
-namespace functional{
+namespace functionnal{
 
 /*!
- *\brief Helper class defining a Functional object storing its own memory
+ *\brief Helper class defining a Functionnal object storing its own memory
  */
 template < typename _EvalBase >
-struct Functional {
+struct Functionnal {
     typedef _EvalBase EvalBase;
     typedef typename EvalBase::Scalar Scalar;
     enum{
@@ -27,7 +26,7 @@ struct Functional {
     typedef typename EvalBase::EmbeddedVectorType EmbeddedVectorType;
     typedef typename EvalBase::EmbeddingVectorType EmbeddingVectorType;
     typedef typename EvalBase::CoeffType CoeffType;
-    typedef Functional<typename EvalBase::Derivative> Derivative;
+    typedef Functionnal<typename EvalBase::Derivative> Derivative;
 
     //! Actual storage of the coefficients
     CoeffType coeffs;
@@ -35,18 +34,18 @@ struct Functional {
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     inline
-    Functional(){ }
+    Functionnal(){ }
 
 
     template <typename Derived>
     inline
-    Functional(const Eigen::MatrixBase<Derived>& otherCoeffs)
+    Functionnal(const Eigen::MatrixBase<Derived>& otherCoeffs)
           : coeffs(otherCoeffs){
     }   // update with input param
 
 
     inline
-    Functional(const std::array<Scalar, Dim*NbCoeff>& coeffArray)
+    Functionnal(const std::array<Scalar, Dim*NbCoeff>& coeffArray)
           : coeffs(coeffArray.data()){
     }   // update with input param
 
@@ -64,7 +63,7 @@ struct Functional {
     }
 
     /*!
-     * \brief Build and return de derivative of the Functional
+     * \brief Build and return de derivative of the Functionnal
      */
     inline
     Derivative derivative() const {
@@ -82,11 +81,11 @@ public:
 
 namespace internal{
 /*!
- *\brief Helper class defining a Functional object using external memory
+ *\brief Helper class defining a Functionnal object using external memory
  */
 template <typename _EvalBase,
           template <typename> class MapType >
-struct FunctionalMapBase {
+struct FunctionnalMapBase {
 
     typedef _EvalBase EvalBase;
     typedef typename EvalBase::Scalar Scalar;
@@ -97,19 +96,19 @@ struct FunctionalMapBase {
     typedef typename EvalBase::EmbeddedVectorType EmbeddedVectorType;
     typedef typename EvalBase::EmbeddingVectorType EmbeddingVectorType;
     typedef typename EvalBase::CoeffType CoeffType;
-    typedef Functional<typename EvalBase::Derivative> Derivative;
+    typedef Functionnal<typename EvalBase::Derivative> Derivative;
 
     //! Map to the actual coefficients
     MapType<CoeffType> coeffs;
 
 
-    inline FunctionalMapBase(Scalar* data)
+    inline FunctionnalMapBase(Scalar* data)
         :coeffs(data){}
-    inline FunctionalMapBase(const Scalar* data)
+    inline FunctionnalMapBase(const Scalar* data)
         :coeffs(data){}
 
-    inline Functional<EvalBase> asFunctional() const{
-        return Functional<EvalBase>(coeffs);
+    inline Functionnal<EvalBase> asFunctionnal() const{
+        return Functionnal<EvalBase>(coeffs);
     }
 
     //! \brief Init with default coefficients
@@ -122,7 +121,7 @@ struct FunctionalMapBase {
         return EvalBase::staticEval(x, coeffs);
     }
 
-    //! Build and return de derivative of the FunctionalMap as Functional
+    //! Build and return de derivative of the FunctionnalMap as Functionnal
     inline
     Derivative derivative() const {
         return EvalBase::derivative(coeffs);
@@ -140,55 +139,54 @@ template<class T> using Map      = Eigen::Map<T>;
 template<class T> using ConstMap = const Eigen::Map<const T>;
 
 } // namespace internal
-} // namespace Functional
+} // namespace Functionnal
 
 ////////////////////////////////////////////////////////////////////////////////
 // Predefined types
 
-#include "functionalEvalFunc.h"
+#include "functionnalEvalFunc.h"
 
 
-namespace functional{
-
-template<typename _EvalBase>
-using FunctionalMap =
-internal::FunctionalMapBase<_EvalBase, internal::Map >;
+namespace functionnal{
 
 template<typename _EvalBase>
-using ConstFunctionalMap =
-internal::FunctionalMapBase<_EvalBase, internal::ConstMap >;
+using FunctionnalMap =
+internal::FunctionnalMapBase<_EvalBase, internal::Map >;
+
+template<typename _EvalBase>
+using ConstFunctionnalMap =
+internal::FunctionnalMapBase<_EvalBase, internal::ConstMap >;
 
 
 
 // Polynomial typedefs
 template<typename _Scalar, int _Degree, int _Dim>
 using Polynomial =
-Functional< PolynomialEvalFunc< _Scalar, _Degree, _Dim > >;
+Functionnal< PolynomialEvalFunc< _Scalar, _Degree, _Dim > >;
 
 template<typename _Scalar, int _Degree, int _Dim>
 using PolynomialMap =
-FunctionalMap< PolynomialEvalFunc< _Scalar, _Degree, _Dim > >;
+FunctionnalMap< PolynomialEvalFunc< _Scalar, _Degree, _Dim > >;
 
 template<typename _Scalar, int _Degree, int _Dim>
 using ConstPolynomialMap =
-ConstFunctionalMap< PolynomialEvalFunc< _Scalar, _Degree, _Dim > >;
+ConstFunctionnalMap< PolynomialEvalFunc< _Scalar, _Degree, _Dim > >;
 
 
 // Bezier typedefs
 template<typename _Scalar, int _Degree, int _Dim>
 using Bezier =
-Functional< BezierBinomialEvalFunc< _Scalar, _Degree, _Dim > >;
+Functionnal< BezierBinomialEvalFunc< _Scalar, _Degree, _Dim > >;
 
 template<typename _Scalar, int _Degree, int _Dim>
 using BezierMap =
-FunctionalMap< BezierBinomialEvalFunc< _Scalar, _Degree, _Dim > >;
+FunctionnalMap< BezierBinomialEvalFunc< _Scalar, _Degree, _Dim > >;
 
 template<typename _Scalar, int _Degree, int _Dim>
 using ConstBezierMap =
-ConstFunctionalMap< BezierBinomialEvalFunc< _Scalar, _Degree, _Dim > >;
+ConstFunctionnalMap< BezierBinomialEvalFunc< _Scalar, _Degree, _Dim > >;
 
-} // namespace Functional
+} // namespace Functionnal
 
-#include "functional.hpp"
+#include "functionnal.hpp"
 
-#endif // FUNCTIONAL_H

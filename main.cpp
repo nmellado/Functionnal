@@ -1,8 +1,8 @@
 /*
-    This Source Code Form is subject to the terms of the 
-    Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed 
+    This Source Code Form is subject to the terms of the
+    Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed
     with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
-    
+
     \author Nicolas Mellado nmellado0@gmail.com
 */
 
@@ -10,7 +10,7 @@
 #include <fstream>
 #include <Eigen/Dense>
 
-#include "functional.h"
+#include "functionnal.h"
 #include "constrainedBezier.h"
 
 namespace Test_Bezier{
@@ -18,9 +18,9 @@ typedef double Scalar;
 enum{Dim=2};
 enum{Degree=2};
 
-typedef functional::Bezier<Scalar, Degree, Dim> BezierCurve;
-typedef functional::BezierMap<Scalar, Degree, Dim> BezierMap;
-typedef functional::ConstrainedBezierMap<Scalar, Degree+2, Dim> ConstrBezierMap;
+typedef functionnal::Bezier<Scalar, Degree, Dim> BezierCurve;
+typedef functionnal::BezierMap<Scalar, Degree, Dim> BezierMap;
+typedef functionnal::ConstrainedBezierMap<Scalar, Degree+2, Dim> ConstrBezierMap;
 
 }
 
@@ -79,7 +79,7 @@ int main(int /*argc*/, char */*argv*/[])
 
     // test map to object conversion
     BezierMap bezierMap ( bezier.coeffs.data() );       // changes in bezier will affect bezierMap
-    BezierCurve cBezierCopy = bezierMap.asFunctional(); // duplicate memory: objects are independants
+    BezierCurve cBezierCopy = bezierMap.asFunctionnal(); // duplicate memory: objects are independants
     std::cout << "Autonomous copy of Constrained control points"<<std::endl;
     std::cout << cBezierCopy << std::endl;
 
