@@ -13,8 +13,6 @@ set (GNUPLOT ${FUNCTIONNAL_DIRECTORY}/trace.plot )
 
 set (CMAKE_CXX_STANDARD 11)
 
-list( APPEND CMAKE_CXX_FLAGS "-fPIC -Wall -Wpedantic -Wextra")
-
 add_custom_target( functionnal_copy_gnuplot_files
     COMMAND ${CMAKE_COMMAND} -E copy ${GNUPLOT} ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "Copying gnuplot script to build dir" VERBATIM
