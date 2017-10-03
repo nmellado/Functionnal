@@ -20,7 +20,7 @@ plot "./control0.txt" with lines ls 1 t "Control Polygon 0", \
 plot "./control1.txt" with lines ls 1 t "Control Polygon 1 ", \
      "./curves.txt" u 3:4 with lines ls 2  t "Bezier curve 1 "
 
-set xrange [-1:1]
+set xrange [-0.5:0]
 set yrange [-1:1]
 # --- GRAPH c
 plot "./hcontrol0.txt" with lines ls 1 t "Control Hodograph 0 ", \

@@ -16,7 +16,7 @@
 namespace Test_Bezier{
 typedef double Scalar;
 enum{Dim=2};
-enum{Degree=2};
+enum{Degree=3};
 
 typedef functionnal::Bezier<Scalar, Degree, Dim> BezierCurve;
 typedef functionnal::BezierMap<Scalar, Degree, Dim> BezierMap;
@@ -37,9 +37,10 @@ int main(int /*argc*/, char */*argv*/[])
     // build a random bezier curve
     //BezierCurve bezier (BezierCurve::CoeffType::Random());
     BezierCurve bezier ( {
-                             0.25, 1.0 ,
-                             0.50, 0.25,
-                             0.75, 1.0
+                             0.20, 1.0 ,
+                             0.35, 0.25,
+                             0.45, 0.25,
+                             0.80, 1.0
                          } );
 
     // create a new bezier curve from the first one, sharing the same memory,
