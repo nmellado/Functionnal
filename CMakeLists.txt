@@ -25,7 +25,11 @@ add_library( functionnal INTERFACE )
 target_sources( functionnal INTERFACE ${HEADER} ${IMPL} )
 target_include_directories ( functionnal INTERFACE ${FUNCTIONNAL_DIRECTORY} )
 
-add_executable (bezier ${DEMOS_ROOT}/bezier.cpp )
+add_executable ( bezier ${DEMOS_ROOT}/bezier.cpp )
 add_dependencies( bezier functionnal functionnal_copy_gnuplot_files )
 target_include_directories ( bezier PUBLIC ${FUNCTIONNAL_DIRECTORY} )
+
+add_executable (polynomial ${DEMOS_ROOT}/polynomial.cpp )
+add_dependencies( polynomial functionnal functionnal_copy_gnuplot_files )
+target_include_directories ( polynomial PUBLIC ${FUNCTIONNAL_DIRECTORY} )
 

@@ -161,16 +161,16 @@ internal::FunctionnalMapBase<_EvalBase, internal::ConstMap >;
 
 // Polynomial typedefs
 template<typename _Scalar, int _Degree, int _Dim>
-using Polynomial =
-Functionnal< PolynomialEvalFunc< _Scalar, _Degree, _Dim > >;
+using CWisePolynomial =
+Functionnal< CWisePolynomialEvalFunc< _Scalar, _Degree, _Dim > >;
 
 template<typename _Scalar, int _Degree, int _Dim>
-using PolynomialMap =
-FunctionnalMap< PolynomialEvalFunc< _Scalar, _Degree, _Dim > >;
+using CWisePolynomialMap =
+FunctionnalMap< CWisePolynomialEvalFunc< _Scalar, _Degree, _Dim > >;
 
 template<typename _Scalar, int _Degree, int _Dim>
-using ConstPolynomialMap =
-ConstFunctionnalMap< PolynomialEvalFunc< _Scalar, _Degree, _Dim > >;
+using CWiseConstPolynomialMap =
+ConstFunctionnalMap< CWisePolynomialEvalFunc< _Scalar, _Degree, _Dim > >;
 
 
 // Bezier typedefs
