@@ -27,15 +27,24 @@ int main(int /*argc*/, char */*argv*/[])
     using namespace Test_Polynomial;
     using namespace std;
 
-    // c1(x) = 4.5x**3 + 3.5x**2 + 2.5x + 1.5
-    //Curve c1 ( {  4.5, 3.5, 2.5, 1.5  });
-    Curve c1 /*( { 0, 0, 0, 1  })*/;
+    Curve c1 ( { 0, 0, 0, 1 } );             // x3
+    Curve c2 ( { 0.5, 0, -2, 0.7 } );        // 0.5 - 2x^2 + 0.7x^3
+    Curve c3 ( Curve::CoeffType::Random() ); //
 
-    auto input  = Curve::EmbeddedVectorType::Random();
-    auto output = c1.eval( input );
+    typename Curve::EmbeddedVectorType  input  = Curve::EmbeddedVectorType::Random();
+    typename Curve::EmbeddingVectorType o1 = c1.eval( input );
+    typename Curve::EmbeddingVectorType o2 = c2.eval( input );
+    typename Curve::EmbeddingVectorType o3 = c3.eval( input );
+
+    std::cout << "# \"f(x) = " << c1 << "\""
+              << "  \"g(x) = " << c2 << "\""
+              << "  \"h(x) = " << c3 << "\"" << std::endl;
 
     for (int i = 0; i < Dim; ++i)
-        std::cout << input(i) << " " << output(i) << "\n";
+        std::cout << input(i) << " "
+                  << o1(i) << " "
+                  << o2(i) << " "
+                  << o3(i) << "\n";
     std::cout << std::flush;
 
     return EXIT_SUCCESS;
