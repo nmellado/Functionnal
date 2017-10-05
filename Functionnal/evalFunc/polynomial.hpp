@@ -12,7 +12,7 @@
 #include "Functionnal/common.h"
 #include <iostream>
 
-namespace Functionnal{
+namespace functionnal{
 /*!
  * \brief Base class used to evaluate a polynomial function of arbitrary degree,
  * on each component of a n-dimensional vector (n*1D evaluation). As a result,

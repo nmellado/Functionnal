@@ -13,7 +13,7 @@
 #include "Functionnal/evalFunc/polynomial.hpp"
 #include <iostream>
 
-namespace Functionnal{
+namespace functionnal{
 
 
 /*!

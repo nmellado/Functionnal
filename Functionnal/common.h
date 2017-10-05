@@ -12,7 +12,7 @@
 #include <cmath>
 
 
-namespace Functionnal {
+namespace functionnal {
 namespace Utils{
 
 //! \brief Compile time pow

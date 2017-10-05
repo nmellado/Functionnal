@@ -10,7 +10,7 @@
 
 #include "Functionnal/functionnal.h"
 
-namespace Functionnal{
+namespace functionnal{
 namespace internal{
 } // namespace internal
 } // namespace Functionnal
@@ -20,7 +20,7 @@ template <class StreamT,
           template <typename> class _MapType>
 inline
 StreamT& operator<< (StreamT& stream,
-                     const Functionnal::internal::
+                     const functionnal::internal::
                      FunctionnalMapBase<_EvalBase, _MapType> &p){
     p.print(stream);
     return stream;
@@ -30,7 +30,7 @@ template <class StreamT,
           typename _EvalBase>
 inline
 StreamT& operator<< (StreamT& stream,
-                     const Functionnal::
+                     const functionnal::
                      Functionnal<_EvalBase> &p){
     p.print(stream);
     return stream;

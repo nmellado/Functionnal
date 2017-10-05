@@ -17,7 +17,7 @@ typedef double Scalar;
 enum{Dim=50}; // we test on 50 samples at once
 enum{Degree=3};
 
-using Curve = Functionnal::CWisePolynomial<Scalar, Degree, Dim>;
+using Curve = functionnal::CWisePolynomial<Scalar, Degree, Dim>;
 
 }
 
