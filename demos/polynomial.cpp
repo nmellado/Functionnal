@@ -31,10 +31,10 @@ int main(int /*argc*/, char */*argv*/[])
     Curve c2 ( { 0.5, 0, -2, 0.7 } );        // 0.5 - 2x^2 + 0.7x^3
     Curve c3 ( Curve::CoeffType::Random() ); //
 
-    typename Curve::EmbeddedVectorType  input  = Curve::EmbeddedVectorType::Random();
-    typename Curve::EmbeddingVectorType o1 = c1.eval( input );
-    typename Curve::EmbeddingVectorType o2 = c2.eval( input );
-    typename Curve::EmbeddingVectorType o3 = c3.eval( input );
+    typename Curve::InputVectorType  input  = Curve::InputVectorType::Random();
+    typename Curve::OutputVectorType o1 = c1.eval( input );
+    typename Curve::OutputVectorType o2 = c2.eval( input );
+    typename Curve::OutputVectorType o3 = c3.eval( input );
 
     std::cout << "# \"f(x) = " << c1 << "\""
               << "  \"g(x) = " << c2 << "\""

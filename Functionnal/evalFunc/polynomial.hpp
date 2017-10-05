@@ -43,10 +43,10 @@ struct CWisePolynomialEvalFunc{
         NbCoeff   = (_Degree+1)
     };
     //! Vector type in the parametric domain, defines a position in the parametric domain
-    typedef Eigen::Matrix<Scalar, NbElement, 1> EmbeddedVectorType;
+    typedef Eigen::Matrix<Scalar, NbElement, 1> InputVectorType;
 
     //! Vector type in the embedding domain
-    typedef Eigen::Matrix<Scalar, NbElement, 1> EmbeddingVectorType;
+    typedef Eigen::Matrix<Scalar, NbElement, 1> OutputVectorType;
 
     typedef Eigen::Matrix<Scalar, 1, NbCoeff> CoeffType;
 
@@ -79,7 +79,7 @@ struct CWisePolynomialEvalFunc{
      * \endcode
      */
     static inline
-    EmbeddingVectorType staticEval(const EmbeddedVectorType& x,
+    OutputVectorType staticEval(const InputVectorType& x,
                                    const Eigen::Ref<const CoeffType>& coeffs)
     {
         // generate evaluation matrix with:

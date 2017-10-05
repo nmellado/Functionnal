@@ -34,10 +34,10 @@ struct BezierEvalFunc{
         NbCoeff = _Dim*(_Degree+1) //need the different control points
     };
     //! Vector type in the parametric domain, defines a position in the parametric domain
-    typedef Eigen::Matrix<Scalar, 1, 1> EmbeddedVectorType;
+    typedef Eigen::Matrix<Scalar, 1, 1> InputVectorType;
 
     //! Vector type in the embedding domain
-    typedef Eigen::Matrix<Scalar, Dim, 1> EmbeddingVectorType;
+    typedef Eigen::Matrix<Scalar, Dim, 1> OutputVectorType;
 
     typedef Eigen::Matrix<Scalar, 1, NbCoeff> CoeffType;
 
@@ -69,8 +69,8 @@ struct BezierEvalFunc{
      * \brief Evaluate the Bezier curve for the variable \f$x \in [0 : 1]\f$
      */
     static inline
-    EmbeddingVectorType staticEval(
-            const EmbeddedVectorType& x,
+    OutputVectorType staticEval(
+            const InputVectorType& x,
             const CoeffType& coeffs)
     {
         return recursiveCall(_Degree, 0, x(0), coeffs);
@@ -98,11 +98,11 @@ struct BezierEvalFunc{
 
 private:
     static constexpr
-    EmbeddingVectorType recursiveCall(int r, int i,
+    OutputVectorType recursiveCall(int r, int i,
                                       const Scalar& t,
                                       const CoeffType& coeffsVec){
         return r == 0 ?
-                    EmbeddingVectorType(coeffsVec.template segment<Dim>(Dim*i))
+                    OutputVectorType(coeffsVec.template segment<Dim>(Dim*i))
                   :
                     (Scalar(1)-t) * recursiveCall(r-1, i,   t, coeffsVec).array() +
                                t  * recursiveCall(r-1, i+1, t, coeffsVec).array();
@@ -127,10 +127,10 @@ struct BezierBinomialEvalFunc{
         NbCoeff = _Dim*(_Degree+1) //need the different control points
     };
     //! Vector type in the parametric domain, defines a position in the parametric domain
-    typedef Eigen::Matrix<Scalar, 1, 1> EmbeddedVectorType;
+    typedef Eigen::Matrix<Scalar, 1, 1> InputVectorType;
 
     //! Vector type in the embedding domain
-    typedef Eigen::Matrix<Scalar, Dim, 1> EmbeddingVectorType;
+    typedef Eigen::Matrix<Scalar, Dim, 1> OutputVectorType;
 
     typedef Eigen::Matrix<Scalar, 1, NbCoeff> CoeffType;
 
@@ -154,7 +154,7 @@ struct BezierBinomialEvalFunc{
      * \brief Evaluate the Bezier curve for the variable \f$x \in [0 : 1]\f$
      */
     static inline
-    EmbeddingVectorType staticEval(const EmbeddedVectorType& x,
+    OutputVectorType staticEval(const InputVectorType& x,
                                    const Eigen::Ref<const CoeffType>& coeffs)
     {
         return recursiveCall(x(0), 0, coeffs);
@@ -186,15 +186,15 @@ private:
     }
 
     static constexpr
-    EmbeddingVectorType recursiveCall(const Scalar& t,
+    OutputVectorType recursiveCall(const Scalar& t,
                                       const int i,
                                       const CoeffType& coeffsVec){
         return i == Degree ?
-                      EmbeddingVectorType(
+                      OutputVectorType(
                         coeffsVec.template tail<Dim>()
                         * Bi(t, Degree))
                   :
-                      EmbeddingVectorType(
+                      OutputVectorType(
                         coeffsVec.template segment<Dim>(Dim*i)
                         * Bi(t, i))
                     + recursiveCall(t, i+1, coeffsVec);
@@ -222,10 +222,10 @@ struct RationnalBezierEvalFunc{
                                        // coeffs describe the weights.
     };
     //! Vector type in the parametric domain, defines a position in the parametric domain
-    typedef Eigen::Matrix<Scalar, 1, 1> EmbeddedVectorType;
+    typedef Eigen::Matrix<Scalar, 1, 1> InputVectorType;
 
     //! Vector type in the embedding domain
-    typedef Eigen::Matrix<Scalar, Dim, 1> EmbeddingVectorType;
+    typedef Eigen::Matrix<Scalar, Dim, 1> OutputVectorType;
 
     typedef Eigen::Matrix<Scalar, 1, NbCoeff> CoeffType;
 
@@ -250,7 +250,7 @@ struct RationnalBezierEvalFunc{
      * \brief Evaluate the Bezier curve for the variable \f$x \in [0 : 1]\f$
      */
     static inline
-    EmbeddingVectorType staticEval(const EmbeddedVectorType& x,
+    OutputVectorType staticEval(const InputVectorType& x,
                                    const Eigen::Ref<const CoeffType>& coeffs)
     {
         return recursiveCall(x(0), 0,
@@ -298,18 +298,18 @@ private:
     }
 
     static constexpr
-    EmbeddingVectorType recursiveCall(const Scalar& t,
+    OutputVectorType recursiveCall(const Scalar& t,
                                       const int i,
                                       const CoeffType& coeffsVec,
                                       const Scalar& wSum){
         return i == Degree ?
-                      EmbeddingVectorType(
+                      OutputVectorType(
                         coeffsVec.template segment<Dim>(Dim*i)
                         * Bi(t, Degree)   // binomial coefficient
                         * coeffsVec.template tail<Degree+1>()(i) // element weight
                         / wSum)           // normalization
                   :
-                      EmbeddingVectorType(
+                      OutputVectorType(
                         coeffsVec.template segment<Dim>(Dim*i)
                         * Bi(t, i)        // binomial coefficient
                         * coeffsVec.template tail<Degree+1>()(i) // element weight

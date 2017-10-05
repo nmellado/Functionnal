@@ -50,8 +50,8 @@ public:
         Degree  = EvalBase::Degree
     };
 
-    typedef typename EvalBase::EmbeddedVectorType EmbeddedVectorType;
-    typedef typename EvalBase::EmbeddingVectorType EmbeddingVectorType;
+    typedef typename EvalBase::InputVectorType InputVectorType;
+    typedef typename EvalBase::OutputVectorType OutputVectorType;
     typedef typename ConstrainedEvalBase::CoeffType CoeffType;
     typedef Functionnal<_EvalFuncT < Scalar,
                                      EvalBase::Derivative::Degree,
@@ -60,22 +60,22 @@ public:
     //! Map to the unconstrained coefficients
     MapType<CoeffType> coeffs;
 
-    EmbeddingVectorType startPoint, //! <\brief Constrained starting point
+    OutputVectorType startPoint, //! <\brief Constrained starting point
                         endPoint;   //! <\brief Constrained end point
 
 
     inline
     ConstrainedBezierMapBase(Scalar* data,
-                             const EmbeddingVectorType& start = EmbeddingVectorType::Zero(),
-                             const EmbeddingVectorType& end   = EmbeddingVectorType::Zero())
+                             const OutputVectorType& start = OutputVectorType::Zero(),
+                             const OutputVectorType& end   = OutputVectorType::Zero())
         : coeffs(data),
           startPoint(start),
           endPoint(end) {}
 
     inline
     ConstrainedBezierMapBase(const Scalar* data,
-                             const EmbeddingVectorType& start = EmbeddingVectorType::Zero(),
-                             const EmbeddingVectorType& end   = EmbeddingVectorType::Zero())
+                             const OutputVectorType& start = OutputVectorType::Zero(),
+                             const OutputVectorType& end   = OutputVectorType::Zero())
         : coeffs(data),
           startPoint(start),
           endPoint(end) {}
@@ -100,7 +100,7 @@ public:
     }
 
     inline
-    EmbeddingVectorType eval(const EmbeddedVectorType& x) const{
+    OutputVectorType eval(const InputVectorType& x) const{
         return EvalBase::staticEval(x, concatCoeffs());
     }
 
@@ -133,8 +133,8 @@ private:
         }
 
         static inline typename EvalBase::CoeffType roll(
-                const EmbeddingVectorType& /*start*/,
-                const EmbeddingVectorType& /*end*/,
+                const OutputVectorType& /*start*/,
+                const OutputVectorType& /*end*/,
                 const CoeffType& /*c*/) {
             //static_assert(false, "Unsupported Evaluation class");
             return EvalBase::CoeffType();
@@ -154,8 +154,8 @@ private:
         }
 
         static typename EvalBase::CoeffType roll(
-                const EmbeddingVectorType& start,
-                const EmbeddingVectorType& end,
+                const OutputVectorType& start,
+                const OutputVectorType& end,
                 const CoeffType& c) {
             typename EvalBase::CoeffType cCoeffs;
 
@@ -194,15 +194,15 @@ private:
         }
 
         static typename EvalBase::CoeffType roll(
-                const EmbeddingVectorType& start,
-                const EmbeddingVectorType& end,
+                const OutputVectorType& start,
+                const OutputVectorType& end,
                 const CoeffType& c) {
             typename EvalBase::CoeffType cCoeffs;
-            cCoeffs.template head<EmbeddingVectorType::RowsAtCompileTime>()
+            cCoeffs.template head<OutputVectorType::RowsAtCompileTime>()
                     = start;
-            cCoeffs.template tail<EmbeddingVectorType::RowsAtCompileTime>()
+            cCoeffs.template tail<OutputVectorType::RowsAtCompileTime>()
                     = end;
-            cCoeffs.template segment<NbCoeff>(EmbeddingVectorType::RowsAtCompileTime)
+            cCoeffs.template segment<NbCoeff>(OutputVectorType::RowsAtCompileTime)
                     = c;
 
             return cCoeffs;
@@ -220,15 +220,15 @@ private:
         }
 
         static typename EvalBase::CoeffType roll(
-                const EmbeddingVectorType& start,
-                const EmbeddingVectorType& end,
+                const OutputVectorType& start,
+                const OutputVectorType& end,
                 const CoeffType& c) {
             typename EvalBase::CoeffType cCoeffs;
-            cCoeffs.template head<EmbeddingVectorType::RowsAtCompileTime>()
+            cCoeffs.template head<OutputVectorType::RowsAtCompileTime>()
                     = start;
-            cCoeffs.template tail<EmbeddingVectorType::RowsAtCompileTime>()
+            cCoeffs.template tail<OutputVectorType::RowsAtCompileTime>()
                     = end;
-            cCoeffs.template segment<NbCoeff>(EmbeddingVectorType::RowsAtCompileTime)
+            cCoeffs.template segment<NbCoeff>(OutputVectorType::RowsAtCompileTime)
                     = c;
 
             return cCoeffs;

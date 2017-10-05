@@ -13,7 +13,8 @@
 namespace functionnal{
 
 /*!
- *\brief Helper class defining a Functionnal object storing its own memory
+ *\brief Helper class defining a Functionnal object storing its own memory,
+ *
  */
 template < typename _EvalBase >
 struct Functionnal {
@@ -23,8 +24,8 @@ struct Functionnal {
         Dim     = EvalBase::Dim,
         NbCoeff = EvalBase::NbCoeff
     };
-    typedef typename EvalBase::EmbeddedVectorType EmbeddedVectorType;
-    typedef typename EvalBase::EmbeddingVectorType EmbeddingVectorType;
+    typedef typename EvalBase::InputVectorType InputVectorType;
+    typedef typename EvalBase::OutputVectorType OutputVectorType;
     typedef typename EvalBase::CoeffType CoeffType;
     typedef Functionnal<typename EvalBase::Derivative> Derivative;
 
@@ -68,7 +69,7 @@ struct Functionnal {
     }
 
     inline
-    EmbeddingVectorType eval(const EmbeddedVectorType& x) const{
+    OutputVectorType eval(const InputVectorType& x) const{
         return EvalBase::staticEval(x, coeffs);
     }
 
@@ -103,8 +104,8 @@ struct FunctionnalMapBase {
         Dim     = EvalBase::Dim,
         NbCoeff = EvalBase::NbCoeff
     };
-    typedef typename EvalBase::EmbeddedVectorType EmbeddedVectorType;
-    typedef typename EvalBase::EmbeddingVectorType EmbeddingVectorType;
+    typedef typename EvalBase::InputVectorType InputVectorType;
+    typedef typename EvalBase::OutputVectorType OutputVectorType;
     typedef typename EvalBase::CoeffType CoeffType;
     typedef Functionnal<typename EvalBase::Derivative> Derivative;
 
@@ -127,7 +128,7 @@ struct FunctionnalMapBase {
     { EvalBase::initCoeffs(coeffs); }
 
     inline
-    EmbeddingVectorType eval(const EmbeddedVectorType& x) const{
+    OutputVectorType eval(const InputVectorType& x) const{
         return EvalBase::staticEval(x, coeffs);
     }
 

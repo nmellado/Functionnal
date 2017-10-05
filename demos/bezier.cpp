@@ -67,7 +67,7 @@ int main(int /*argc*/, char */*argv*/[])
     filebuf.open ("curves.txt");
     {
         filebuf<<"#x0 y0 x1 y1" << std::endl;
-        ConstrBezierMap::EmbeddedVectorType input;
+        ConstrBezierMap::InputVectorType input;
 
         for (int t = 0; t != nbSample; ++t){
             input << Scalar(t)/Scalar(nbSample-1);
@@ -102,7 +102,7 @@ int main(int /*argc*/, char */*argv*/[])
     filebuf.open ("hodographs.txt");
     {
         filebuf<<"# Bezier curve stretch" << std::endl;
-        ConstrBezierMap::EmbeddedVectorType input;
+        ConstrBezierMap::InputVectorType input;
 
         for (int t = 0; t != nbSample; ++t){
             input << Scalar(t)/Scalar(nbSample-1);
