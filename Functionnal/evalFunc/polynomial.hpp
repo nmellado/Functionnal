@@ -15,8 +15,8 @@
 namespace functionnal{
 
 /*!
- * \brief Base class used to evaluate a n-dimensionnal quadric, expressed as
- * $Q(X) = \sum_{i,j=1}^{D+1} x_i Q_{ij} x_j + \sum_{i=1}^{D+1} P_i  x_i + R = 0$
+ * \brief Base class used to evaluate a n-dimensionnal quadric, defined as
+ * $x Q x^\mathrm{T} + P x^\mathrm{T} + R = 0$
  * with $X = {x_1, ..., x_{n+1}}$
  * \see https://en.wikipedia.org/wiki/Quadric
  */
@@ -27,19 +27,76 @@ struct QuadricEvalFunc {
     constexpr static const int Degree   = 2;
     constexpr static const int Dim      = _Dim;
 
-    constexpr static const int QSize    = Dim*Dim;
-    constexpr static const int PSize    = Dim;
+    constexpr static const int QSize    = (Dim)*(Dim);
+    constexpr static const int PSize    = (Dim);
     constexpr static const int RSize    = 1;
 
     constexpr static const int NbCoeff  = QSize + PSize + RSize;
 
-    //! Vector type in the parametric domain, defines a position in the parametric domain
     typedef Eigen::Matrix<Scalar, Dim, 1> InputVectorType;
-
-    //! Vector type in the embedding domain
-    typedef Eigen::Matrix<Scalar, 1, 1> OutputVectorType;
-
+    typedef Scalar OutputVectorType;
     typedef Eigen::Matrix<Scalar, 1, NbCoeff> CoeffType;
+
+    typedef Eigen::Matrix<Scalar, (Dim), (Dim)> QType;
+    typedef Eigen::Matrix<Scalar, 1,     (Dim)> PType;
+    typedef Eigen::Matrix<Scalar, 1,       1  > RType;
+
+    typedef void Derivative;
+
+
+    inline
+    QuadricEvalFunc(){}
+
+    static inline Eigen::Map<QType> getQMap(Eigen::Ref<CoeffType> coeffs) {
+        return Eigen::Map<QType> (coeffs.data());
+    }
+
+    static inline Eigen::Ref<PType> getPMap(Eigen::Ref<CoeffType> coeffs) {
+        return Eigen::Ref<PType> (coeffs.template block<1, PType::ColsAtCompileTime>(0, QSize));
+    }
+
+    static inline Eigen::Ref<RType> getRMap(Eigen::Ref<CoeffType> coeffs) {
+        return Eigen::Ref<RType> (coeffs.template tail<1>());
+    }
+
+    static inline Eigen::Map<const QType> getConstQMap(const Eigen::Ref<const CoeffType> coeffs) {
+        return Eigen::Map<const QType> (coeffs.data());
+    }
+
+    static inline Eigen::Ref<const PType> getConstPMap(const Eigen::Ref<const CoeffType> coeffs) {
+        return Eigen::Ref<const PType> (coeffs.template block<1, PType::ColsAtCompileTime>(0, QSize));
+    }
+
+    static inline Eigen::Ref<const RType> getConstRMap(const Eigen::Ref<const CoeffType> coeffs) {
+        return Eigen::Ref<const RType> (coeffs.template tail<1>());
+    }
+
+    /*!
+     * \brief Init the quadric as \f$f(x) = x\f$
+     * \param coeffs
+     */
+    static void initCoeffs (Eigen::Ref<CoeffType> coeffs,
+                            Eigen::Ref<const QType> q = QType::Zero(),
+                            Eigen::Ref<const PType> p = PType::Ones(),
+                            const RType& r = RType(0.))
+    {
+        getQMap(coeffs) = q;
+        getPMap(coeffs) = p;
+        getRMap(coeffs) = r;
+    }
+
+
+    static inline
+    OutputVectorType staticEval(const InputVectorType& x,
+                                const Eigen::Ref<const CoeffType>& coeffs)
+    {
+        auto q = getConstQMap(coeffs);
+        auto p = getConstPMap(coeffs);
+        auto r = getConstRMap(coeffs);
+
+        return (x.transpose()*q).dot(x) + p.dot(x) + r(0);
+    }
+
 };
 
 
