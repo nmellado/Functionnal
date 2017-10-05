@@ -73,6 +73,15 @@ struct Functionnal {
         return EvalBase::staticEval(x, coeffs);
     }
 
+    /// Convenience function, allowing direct use of brace-initializer lists:
+    /// \code
+    /// f.eval( {{ x,  y}} );
+    /// \endcode
+    inline
+    OutputVectorType eval(const std::array<Scalar, InputVectorType::SizeAtCompileTime> & x) const{
+        return EvalBase::staticEval(Eigen::Map<const InputVectorType>(x.data()), coeffs);
+    }
+
     /*!
      * \brief Build and return de derivative of the Functionnal
      */
