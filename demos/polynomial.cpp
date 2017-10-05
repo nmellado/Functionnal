@@ -14,10 +14,12 @@
 
 namespace Test_Polynomial{
 typedef double Scalar;
-enum{Dim=50}; // we test on 50 samples at once
+enum{NbElemt=50}; // we test on 50 samples at once
+enum{Dim = 2};
 enum{Degree=3};
 
-using Curve = functionnal::CWisePolynomial<Scalar, Degree, Dim>;
+using Curve = functionnal::CWisePolynomial<Scalar, Degree, NbElemt>;
+using Quadric1D = functionnal::Quadric<Scalar,  Dim>;
 
 }
 
@@ -40,11 +42,29 @@ int main(int /*argc*/, char */*argv*/[])
               << "  \"g(x) = " << c2 << "\""
               << "  \"h(x) = " << c3 << "\"" << std::endl;
 
-    for (int i = 0; i < Dim; ++i)
+    for (int i = 0; i < NbElemt; ++i)
         std::cout << input(i) << " "
                   << o1(i) << " "
                   << o2(i) << " "
                   << o3(i) << "\n";
+    std::cout << std::flush;
+
+    std::cout << "Testing 2D quadric f(x,y) = x^2 + y^2" << std::endl;
+    Quadric1D q1;
+    Quadric1D::EvalBase::getQMap( q1.coeffs ) = Quadric1D::EvalBase::QType::Identity();
+    Quadric1D::EvalBase::getPMap( q1.coeffs ) = Quadric1D::EvalBase::PType::Zero();
+
+    // sample quadric in [-1:1], 20 samples per dimension (not ordered)
+    for( int i = 0; i != 10; ++i) {
+        Scalar x = Scalar(i+1)/Scalar(10);
+        for( int j = 0; j != 10; ++j) {
+            Scalar y = Scalar(j+1)/Scalar(10);
+            std::cout <<  x << " " <<  y << " " << q1.eval( {{ x,  y}} ) << "\n";
+            std::cout <<  x << " " << -y << " " << q1.eval( {{ x, -y}} ) << "\n";
+            std::cout << -x << " " <<  y << " " << q1.eval( {{-x,  y}} ) << "\n";
+            std::cout << -x << " " << -y << " " << q1.eval( {{-x, -y}} ) << "\n";
+        }
+    }
     std::cout << std::flush;
 
     return EXIT_SUCCESS;
