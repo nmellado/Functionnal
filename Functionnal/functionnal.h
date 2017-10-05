@@ -34,7 +34,7 @@ struct Functionnal {
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     inline
-    Functionnal(){ }
+    Functionnal(){ EvalBase::initCoeffs( coeffs); }
 
 
     template <typename Derived>
