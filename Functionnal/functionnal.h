@@ -44,8 +44,18 @@ struct Functionnal {
     }   // update with input param
 
 
+    /*!
+     * \brief Functionnal
+     * \param coeffArray curve constructors
+     *
+     * Can be called using brace-initializer lists:
+     * \code
+     * using MyFonctionnal = Functionnal<SomeEvalFunction>;
+     * MyFonctionnal f ( {1.0 , 2., } ); // MyFonctionnal::NbCoeff = 2
+     * \endcode
+     */
     inline
-    Functionnal(const std::array<Scalar, Dim*NbCoeff>& coeffArray)
+    Functionnal(const std::array<Scalar, NbCoeff>& coeffArray)
           : coeffs(coeffArray.data()){
     }   // update with input param
 
