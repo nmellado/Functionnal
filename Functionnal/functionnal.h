@@ -180,6 +180,21 @@ internal::FunctionnalMapBase<_EvalBase, internal::ConstMap >;
 
 
 // Polynomial typedefs
+template<typename _Scalar, int _Dim>
+using Quadric =
+Functionnal< QuadricEvalFunc< _Scalar, _Dim > >;
+
+template<typename _Scalar, int _Dim>
+using QuadricMap =
+FunctionnalMap< QuadricEvalFunc< _Scalar, _Dim > >;
+
+template<typename _Scalar, int _Dim>
+using ConstQuadricMap =
+ConstFunctionnalMap< QuadricEvalFunc< _Scalar, _Dim > >;
+
+
+
+// Polynomial typedefs
 template<typename _Scalar, int _Degree, int _Dim>
 using CWisePolynomial =
 Functionnal< CWisePolynomialEvalFunc< _Scalar, _Degree, _Dim > >;
