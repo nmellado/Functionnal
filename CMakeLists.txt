@@ -29,7 +29,11 @@ add_executable ( bezier ${DEMOS_ROOT}/bezier.cpp )
 add_dependencies( bezier functionnal functionnal_copy_gnuplot_files )
 target_include_directories ( bezier PUBLIC ${FUNCTIONNAL_DIRECTORY} )
 
+add_executable (cwise ${DEMOS_ROOT}/cwise.cpp )
+add_dependencies( cwise functionnal)
+target_include_directories ( cwise PUBLIC ${FUNCTIONNAL_DIRECTORY} )
+
 add_executable (polynomial ${DEMOS_ROOT}/polynomial.cpp )
-add_dependencies( polynomial functionnal functionnal_copy_gnuplot_files )
+add_dependencies( polynomial functionnal)
 target_include_directories ( polynomial PUBLIC ${FUNCTIONNAL_DIRECTORY} )
 

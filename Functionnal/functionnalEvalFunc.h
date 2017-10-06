@@ -10,5 +10,6 @@
 
 #include "Functionnal/evalFunc/polynomial.hpp"
 #include "Functionnal/evalFunc/bezier.hpp"
+#include "Functionnal/evalFunc/cwise.hpp"
 
 
