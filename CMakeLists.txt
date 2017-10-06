@@ -26,6 +26,8 @@ add_library( functionnal INTERFACE )
 target_sources( functionnal INTERFACE ${HEADER} ${IMPL} )
 target_include_directories ( functionnal INTERFACE ${FUNCTIONNAL_DIRECTORY} )
 
+install (DIRECTORY ${FUNCTIONNAL_DIRECTORY}/Functionnal/ DESTINATION ${CMAKE_INSTALL_PREFIX})
+
 if ( FUNCTIONNAL_COMPILE_DEMOS )
 
     set (GNUPLOT ${FUNCTIONNAL_DIRECTORY}/trace.plot )
