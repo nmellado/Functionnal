@@ -23,7 +23,7 @@ using Curve = functionnal::CWisePolynomial<Scalar, Degree, NbElemt>;
 }
 
 
-int main(int /*argc*/, char */*argv*/[])
+int main(int, char **)
 {
     using namespace Test_Polynomial;
     using namespace std;

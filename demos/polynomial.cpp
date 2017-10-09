@@ -20,7 +20,7 @@ using Linear  = functionnal::Linear <Scalar,  10>;
 }
 
 
-int main(int /*argc*/, char */*argv*/[])
+int main(int, char **)
 {
     using namespace Test_Polynomial;
     using namespace std;

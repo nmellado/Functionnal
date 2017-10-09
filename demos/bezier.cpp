@@ -25,7 +25,7 @@ typedef functionnal::ConstrainedBezierMap<Scalar, Degree+2, Dim> ConstrBezierMap
 }
 
 
-int main(int /*argc*/, char */*argv*/[])
+int main(int, char **)
 {
     using namespace Test_Bezier;
     using namespace std;
