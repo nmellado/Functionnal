@@ -52,4 +52,8 @@ if ( FUNCTIONNAL_COMPILE_DEMOS )
     add_dependencies( polynomial functionnal)
     target_include_directories ( polynomial PUBLIC ${FUNCTIONNAL_DIRECTORY} )
 
+    add_executable (polynomialFitting ${DEMOS_ROOT}/polynomialFitting.cpp )
+    add_dependencies( polynomialFitting functionnal)
+    target_include_directories ( polynomialFitting PUBLIC ${FUNCTIONNAL_DIRECTORY} )
+
 endif ( FUNCTIONNAL_COMPILE_DEMOS )
