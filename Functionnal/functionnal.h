@@ -20,10 +20,9 @@ template < typename _EvalBase >
 struct Functionnal {
     typedef _EvalBase EvalBase;
     typedef typename EvalBase::Scalar Scalar;
-    enum{
-        Dim     = EvalBase::Dim,
-        NbCoeff = EvalBase::NbCoeff
-    };
+	static const constexpr int NbCoeff = EvalBase::NbCoeff;
+	static const constexpr int Dim     = EvalBase::Dim;
+
     typedef typename EvalBase::InputVectorType InputVectorType;
     typedef typename EvalBase::OutputVectorType OutputVectorType;
     typedef typename EvalBase::CoeffType CoeffType;
