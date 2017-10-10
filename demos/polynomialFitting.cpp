@@ -49,7 +49,7 @@ struct functor : Eigen::DenseFunctor<typename _FunctionMap::Scalar>
             // errors must not be squared here: sign is useful for
             // derivatives computations, and the squared sum is performed
             // by LM main class.
-            fvec(i) = q.eval(samples[i]) - samplesValues[i];
+            fvec(i) = q(samples[i]) - samplesValues[i];
         }
         return 0;
     }
@@ -78,7 +78,7 @@ void runFit( const std::vector<typename Function::InputVectorType>& samples,
     // - value computed by targetFunction
     for (const auto& p : fun.samples)
     {
-        fun.samplesValues.push_back( targetFunction.eval(p) );
+        fun.samplesValues.push_back( targetFunction(p) );
     }
 
     // prepare solver
