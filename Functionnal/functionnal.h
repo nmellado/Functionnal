@@ -12,11 +12,14 @@
 
 namespace functionnal{
 
+template < typename _EvalBase >
+struct Functionnal;
+
 /*!
  *\brief Base class defining the Functionnal API
  *
  */
-template < typename _EvalBase, typename CoeffStorageType, typename DerType >
+template < typename _EvalBase, typename CoeffStorageType >
 struct FunctionnalBase {
 
 public:
@@ -26,7 +29,8 @@ public:
     typedef typename EvalBase::InputVectorType InputVectorType;
     typedef typename EvalBase::OutputVectorType OutputVectorType;
     typedef typename EvalBase::CoeffType CoeffType;
-    typedef DerType Derivative;
+    // Derivatives need to store their coefficients
+    typedef Functionnal<typename _EvalBase::Derivative> Derivative;
 
 protected:
     enum{
@@ -101,12 +105,10 @@ public:
  */
 template < typename _EvalBase >
 struct Functionnal : public FunctionnalBase <_EvalBase,
-                                             typename _EvalBase::CoeffType,
-                                             Functionnal<typename _EvalBase::Derivative> > {
+                                             typename _EvalBase::CoeffType > {
 protected:
     using FBase = FunctionnalBase <_EvalBase,
-                                   typename _EvalBase::CoeffType,
-                                   Functionnal<typename _EvalBase::Derivative> >;
+                                   typename _EvalBase::CoeffType >;
 
 public:
     typedef _EvalBase EvalBase;
@@ -159,26 +161,20 @@ template <typename _EvalBase,
           template <typename> class MapType,
           typename PtrType >
 struct FunctionnalMapBase : public FunctionnalBase <_EvalBase,
-                                                    MapType< typename _EvalBase::CoeffType >,
-                                                    Functionnal<typename _EvalBase::Derivative> >  {
+                                                    MapType< typename _EvalBase::CoeffType > >  {
+
+protected:
+    using FBase = FunctionnalBase <_EvalBase,
+                                   MapType< typename _EvalBase::CoeffType >>;
 
 public:
     typedef _EvalBase EvalBase;
-    typedef typename EvalBase::Scalar Scalar;
+    typedef typename FBase::Scalar Scalar;
 
-    typedef typename EvalBase::InputVectorType InputVectorType;
-    typedef typename EvalBase::OutputVectorType OutputVectorType;
-    typedef typename EvalBase::CoeffType CoeffType;
-    typedef Functionnal<typename EvalBase::Derivative> Derivative;
-
-protected:
-    enum{
-        Dim     = EvalBase::Dim,
-        NbCoeff = EvalBase::NbCoeff
-    };
-    using FBase = FunctionnalBase <_EvalBase,
-                                   MapType< typename _EvalBase::CoeffType >,
-                                   Functionnal<typename _EvalBase::Derivative> >;
+    typedef typename FBase::InputVectorType InputVectorType;
+    typedef typename FBase::OutputVectorType OutputVectorType;
+    typedef typename FBase::CoeffType CoeffType;
+    typedef typename FBase::Derivative Derivative;
 
 public:
     inline FunctionnalMapBase(PtrType* data)
