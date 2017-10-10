@@ -18,15 +18,26 @@ namespace functionnal{
  */
 template < typename _EvalBase >
 struct Functionnal {
+
+public:
     typedef _EvalBase EvalBase;
     typedef typename EvalBase::Scalar Scalar;
-	static const constexpr int NbCoeff = EvalBase::NbCoeff;
-	static const constexpr int Dim     = EvalBase::Dim;
 
     typedef typename EvalBase::InputVectorType InputVectorType;
     typedef typename EvalBase::OutputVectorType OutputVectorType;
     typedef typename EvalBase::CoeffType CoeffType;
     typedef Functionnal<typename EvalBase::Derivative> Derivative;
+
+protected:
+    enum{
+        Dim     = EvalBase::Dim,
+        NbCoeff = EvalBase::NbCoeff
+    };
+
+public:
+    static constexpr int nbCoeff() { return NbCoeff; }
+    static constexpr int dim() { return Dim; }
+
 
     //! Actual storage of the coefficients
     CoeffType coeffs;
@@ -106,16 +117,24 @@ template <typename _EvalBase,
           template <typename> class MapType >
 struct FunctionnalMapBase {
 
+public:
     typedef _EvalBase EvalBase;
     typedef typename EvalBase::Scalar Scalar;
-    enum{
-        Dim     = EvalBase::Dim,
-        NbCoeff = EvalBase::NbCoeff
-    };
+
     typedef typename EvalBase::InputVectorType InputVectorType;
     typedef typename EvalBase::OutputVectorType OutputVectorType;
     typedef typename EvalBase::CoeffType CoeffType;
     typedef Functionnal<typename EvalBase::Derivative> Derivative;
+
+protected:
+    enum{
+        Dim     = EvalBase::Dim,
+        NbCoeff = EvalBase::NbCoeff
+    };
+
+public:
+    static constexpr int nbCoeff() { return NbCoeff; }
+    static constexpr int dim() { return Dim; }
 
     //! Map to the actual coefficients
     MapType<CoeffType> coeffs;
@@ -181,15 +200,15 @@ internal::FunctionnalMapBase<_EvalBase, internal::ConstMap >;
 // Polynomial typedefs
 template<typename _Scalar, int _Dim>
 using Quadric =
-Functionnal< QuadricEvalFunc< _Scalar, _Dim > >;
+Functionnal< GeneralizedQuadricEvalFunc< _Scalar, _Dim > >;
 
 template<typename _Scalar, int _Dim>
 using QuadricMap =
-FunctionnalMap< QuadricEvalFunc< _Scalar, _Dim > >;
+FunctionnalMap< GeneralizedQuadricEvalFunc< _Scalar, _Dim > >;
 
 template<typename _Scalar, int _Dim>
 using ConstQuadricMap =
-ConstFunctionnalMap< QuadricEvalFunc< _Scalar, _Dim > >;
+ConstFunctionnalMap< GeneralizedQuadricEvalFunc< _Scalar, _Dim > >;
 
 template<typename _Scalar, int _Dim>
 using Linear =
