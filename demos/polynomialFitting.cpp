@@ -21,11 +21,11 @@ struct Functor_w_df : public Eigen::NumericalDiff<_Base, Eigen::NumericalDiffMod
     using Base = _Base;
     using Scalar = typename Base::Scalar;
 
-    inline Functor_w_df(Scalar _epsfcn)
-        : Eigen::NumericalDiff<_Base, Eigen::NumericalDiffMode::Central>(_epsfcn) {}
+    inline Functor_w_df(const Base& fun, Scalar _epsfcn)
+        : Eigen::NumericalDiff<_Base, Eigen::NumericalDiffMode::Central>(fun, _epsfcn) {}
 };
 
-template <int NbSamples, typename _FunctionMap>
+template <typename _FunctionMap>
 struct functor : Eigen::DenseFunctor<typename _FunctionMap::Scalar>
 {
     using FunctionMap    = _FunctionMap;
@@ -37,10 +37,12 @@ struct functor : Eigen::DenseFunctor<typename _FunctionMap::Scalar>
     using QRSolver       = typename Base::QRSolver;
 
 
-    inline functor() : Base(FunctionMap::nbCoeff(), NbSamples) { }
+    inline functor(int NbSamples) : Base(FunctionMap::nbCoeff(), NbSamples) { }
 
     inline int operator() (const InputType &x, ValueType &fvec) const {
         FunctionMap q(x.data());
+
+        const int NbSamples = Base::values();
 
         assert(samples.size() == samplesValues.size());
         assert(samples.size() == NbSamples);
@@ -60,16 +62,17 @@ public:
 };
 
 
-template <int nbSamples, typename Function, typename FunctionMap>
+template <typename Function, typename FunctionMap>
 void runFit( const std::vector<typename Function::InputVectorType>& samples,
-          const Function& targetFunction = Function()) {
+             const Function& targetFunction = Function()) {
 
     using Point =  typename Function::InputVectorType;
     using Scalar = typename Function::Scalar;
 
     // Create Eigen data structures
-    using FunctorType = Functor_w_df<functor<nbSamples, FunctionMap>>;
-    FunctorType fun(std::numeric_limits<Scalar>::epsilon());
+    using FunctorType = functor<FunctionMap>;
+    using FunctorTypeWithAutoDiffs = Functor_w_df<FunctorType>;
+    FunctorTypeWithAutoDiffs fun(FunctorType (samples.size()), std::numeric_limits<Scalar>::epsilon());
 
     fun.samples = samples;
 
@@ -82,7 +85,7 @@ void runFit( const std::vector<typename Function::InputVectorType>& samples,
     }
 
     // prepare solver
-    Eigen::LevenbergMarquardt<FunctorType> lm(fun);
+    Eigen::LevenbergMarquardt<FunctorTypeWithAutoDiffs> lm(fun);
 
     // init problem
     Eigen::Matrix<Scalar, Eigen::Dynamic, 1> coeffs(Function::nbCoeff(), 1);
@@ -115,8 +118,8 @@ void runFit( const std::vector<typename Function::InputVectorType>& samples,
 
 }
 
-template <int Dim, int nbSamples>
-void run() {
+template <int Dim>
+void run(int nbSamples) {
     typedef double Scalar;
 
     using Quadric = functionnal::Quadric < Scalar, Dim >;
@@ -139,13 +142,13 @@ void run() {
     }
 
     std::cout << "## Linear fit" << std::endl;
-    runFit <nbSamples, Linear, LinearMap>(samples);
+    runFit <Linear, LinearMap>(samples);
 
     std::cout << "## Quadric fit" << std::endl;
-    runFit <nbSamples, Quadric, QuadricMap>(samples);
+    runFit <Quadric, QuadricMap>(samples);
 
     std::cout << "## Quadratic Form fit" << std::endl;
-    runFit <nbSamples, QuadraticForm, QuadraticFormMap>(samples);
+    runFit <QuadraticForm, QuadraticFormMap>(samples);
 }
 
 /// In this example we fit a quadric function on real-valued points embedded in a
@@ -160,11 +163,11 @@ int main(int, char **)
     using namespace std;
 
     std::cout << "# 2D" << std::endl;
-    run<2, 10000>();
+    run<2>(10000);
     std::cout << "# 3D" << std::endl;
-    run<3, 1000>();
+    run<3>(1000);
     std::cout << "# 10D" << std::endl;
-    run<10, 1000>();
+    run<10>(1000);
 
     return EXIT_SUCCESS;
 }
