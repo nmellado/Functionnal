@@ -70,6 +70,16 @@ public:
         return EvalBase::staticEval(Eigen::Map<const InputVectorType>(x.data()), coeffs);
     }
 
+    inline
+    OutputVectorType operator() (const InputVectorType& x) const{
+        return eval(x);
+    }
+
+    inline
+    OutputVectorType operator() (const std::array<Scalar, InputVectorType::SizeAtCompileTime> & x) const{
+        return eval(x);
+    }
+
     /*!
      * \brief Build and return the partial derivative of the Functionnal in
      * dimension Did
