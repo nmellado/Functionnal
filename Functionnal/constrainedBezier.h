@@ -105,11 +105,13 @@ public:
     }
 
     /*!
-     * \brief Build and return de derivative of the Functionnal
+     * \brief Build and return the partial derivative of the Functionnal in
+     * dimension Did
      */
+    template <int DId = 0>
     inline
     Derivative derivative() const {
-        return Derivative(EvalBase::staticDerivative(concatCoeffs()));
+        return Derivative(EvalBase::template staticDerivative<DId>(concatCoeffs()));
     }
 
 private:

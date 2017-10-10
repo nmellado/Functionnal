@@ -16,22 +16,10 @@ namespace internal{
 } // namespace Functionnal
 
 template <class StreamT,
-          typename _EvalBase,
-          template <typename> class _MapType>
+          typename EvalBase, typename CoeffStorageType, typename DerType >
 inline
 StreamT& operator<< (StreamT& stream,
-                     const functionnal::internal::
-                     FunctionnalMapBase<_EvalBase, _MapType> &p){
-    p.print(stream);
-    return stream;
-}
-
-template <class StreamT,
-          typename _EvalBase>
-inline
-StreamT& operator<< (StreamT& stream,
-                     const functionnal::
-                     Functionnal<_EvalBase> &p){
+                     functionnal::FunctionnalBase<EvalBase, CoeffStorageType, DerType> &p){
     p.print(stream);
     return stream;
 }

@@ -13,11 +13,11 @@
 namespace functionnal{
 
 /*!
- *\brief Helper class defining a Functionnal object storing its own memory,
+ *\brief Base class defining the Functionnal API
  *
  */
-template < typename _EvalBase >
-struct Functionnal {
+template < typename _EvalBase, typename CoeffStorageType, typename DerType >
+struct FunctionnalBase {
 
 public:
     typedef _EvalBase EvalBase;
@@ -26,7 +26,7 @@ public:
     typedef typename EvalBase::InputVectorType InputVectorType;
     typedef typename EvalBase::OutputVectorType OutputVectorType;
     typedef typename EvalBase::CoeffType CoeffType;
-    typedef Functionnal<typename EvalBase::Derivative> Derivative;
+    typedef DerType Derivative;
 
 protected:
     enum{
@@ -34,41 +34,19 @@ protected:
         NbCoeff = EvalBase::NbCoeff
     };
 
+    inline FunctionnalBase() {}
+
+    inline FunctionnalBase(const CoeffStorageType& input) : coeffs(input) {}
+
 public:
     static constexpr int nbCoeff() { return NbCoeff; }
     static constexpr int dim() { return Dim; }
 
 
     //! Actual storage of the coefficients
-    CoeffType coeffs;
+    CoeffStorageType coeffs;
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-
-    inline
-    Functionnal(){ EvalBase::initCoeffs( coeffs); }
-
-
-    template <typename Derived>
-    inline
-    Functionnal(const Eigen::MatrixBase<Derived>& otherCoeffs)
-          : coeffs(otherCoeffs){
-    }   // update with input param
-
-
-    /*!
-     * \brief Functionnal
-     * \param coeffArray curve constructors
-     *
-     * Can be called using brace-initializer lists:
-     * \code
-     * using MyFonctionnal = Functionnal<SomeEvalFunction>;
-     * MyFonctionnal f ( {1.0 , 2., } ); // MyFonctionnal::NbCoeff = 2
-     * \endcode
-     */
-    inline
-    Functionnal(const std::array<Scalar, NbCoeff>& coeffArray)
-          : coeffs(coeffArray.data()){
-    }   // update with input param
 
 
     //! \brief Init with default coefficients
@@ -93,11 +71,13 @@ public:
     }
 
     /*!
-     * \brief Build and return de derivative of the Functionnal
+     * \brief Build and return the partial derivative of the Functionnal in
+     * dimension Did
      */
+    template <int DId = 0>
     inline
     Derivative derivative() const {
-        return Derivative(EvalBase::staticDerivative(coeffs));
+        return Derivative(EvalBase::template staticDerivative<DId>(coeffs));
     }
 
 public:
@@ -109,13 +89,72 @@ public:
 };
 
 
+/*!
+ *\brief Helper class defining a Functionnal object storing its own memory,
+ *
+ */
+template < typename _EvalBase >
+struct Functionnal : public FunctionnalBase <_EvalBase,
+                                             typename _EvalBase::CoeffType,
+                                             Functionnal<typename _EvalBase::Derivative> > {
+protected:
+    using FBase = FunctionnalBase <_EvalBase,
+                                   typename _EvalBase::CoeffType,
+                                   Functionnal<typename _EvalBase::Derivative> >;
+
+public:
+    typedef _EvalBase EvalBase;
+    typedef typename FBase::Scalar Scalar;
+
+    typedef typename FBase::InputVectorType InputVectorType;
+    typedef typename FBase::OutputVectorType OutputVectorType;
+    typedef typename FBase::CoeffType CoeffType;
+    typedef typename FBase::Derivative Derivative;
+
+
+public:
+
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
+    inline
+    Functionnal(){ EvalBase::initCoeffs( FBase::coeffs ); }
+
+
+    template <typename Derived>
+    inline
+    Functionnal(const Eigen::MatrixBase<Derived>& otherCoeffs)
+          : FBase(otherCoeffs){
+    }   // update with input param
+
+
+    /*!
+     * \brief Functionnal
+     * \param coeffArray curve constructors
+     *
+     * Can be called using brace-initializer lists:
+     * \code
+     * using MyFonctionnal = Functionnal<SomeEvalFunction>;
+     * MyFonctionnal f ( {1.0 , 2., } ); // MyFonctionnal::NbCoeff = 2
+     * \endcode
+     */
+    inline
+    Functionnal(const std::array<Scalar, FBase::nbCoeff()>& coeffArray)
+          : FBase(Eigen::Map<const CoeffType>(coeffArray.data())) {
+    }   // update with input param
+
+};
+
+
 namespace internal{
 /*!
  *\brief Helper class defining a Functionnal object using external memory
  */
 template <typename _EvalBase,
-          template <typename> class MapType >
-struct FunctionnalMapBase {
+          template <typename> class MapType,
+          typename PtrType >
+struct FunctionnalMapBase : public FunctionnalBase <_EvalBase,
+                                                    MapType< typename _EvalBase::CoeffType >,
+                                                    Functionnal<typename _EvalBase::Derivative> >  {
 
 public:
     typedef _EvalBase EvalBase;
@@ -131,45 +170,16 @@ protected:
         Dim     = EvalBase::Dim,
         NbCoeff = EvalBase::NbCoeff
     };
+    using FBase = FunctionnalBase <_EvalBase,
+                                   MapType< typename _EvalBase::CoeffType >,
+                                   Functionnal<typename _EvalBase::Derivative> >;
 
 public:
-    static constexpr int nbCoeff() { return NbCoeff; }
-    static constexpr int dim() { return Dim; }
-
-    //! Map to the actual coefficients
-    MapType<CoeffType> coeffs;
-
-
-    inline FunctionnalMapBase(Scalar* data)
-        :coeffs(data){}
-    inline FunctionnalMapBase(const Scalar* data)
-        :coeffs(data){}
+    inline FunctionnalMapBase(PtrType* data)
+        : FBase(MapType<CoeffType >(data)) {}
 
     inline Functionnal<EvalBase> asFunctionnal() const{
-        return Functionnal<EvalBase>(coeffs);
-    }
-
-    //! \brief Init with default coefficients
-    inline
-    void initCoeffs()
-    { EvalBase::initCoeffs(coeffs); }
-
-    inline
-    OutputVectorType eval(const InputVectorType& x) const{
-        return EvalBase::staticEval(x, coeffs);
-    }
-
-    //! Build and return de derivative of the FunctionnalMap as Functionnal
-    inline
-    Derivative derivative() const {
-        return EvalBase::derivative(coeffs);
-    }
-
-public:
-    template <class StreamT>
-    inline
-    void print(StreamT& stream) const{
-        return EvalBase::staticPrint(stream, coeffs);
+        return Functionnal<EvalBase>(FBase::coeffs);
     }
 };
 
@@ -189,11 +199,15 @@ namespace functionnal{
 
 template<typename _EvalBase>
 using FunctionnalMap =
-internal::FunctionnalMapBase<_EvalBase, internal::Map >;
+internal::FunctionnalMapBase< _EvalBase,
+                              internal::Map,
+                              typename _EvalBase::Scalar >;
 
 template<typename _EvalBase>
 using ConstFunctionnalMap =
-internal::FunctionnalMapBase<_EvalBase, internal::ConstMap >;
+internal::FunctionnalMapBase< _EvalBase,
+                              internal::ConstMap,
+                              const typename _EvalBase::Scalar >;
 
 
 
