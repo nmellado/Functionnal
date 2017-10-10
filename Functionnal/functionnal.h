@@ -203,6 +203,18 @@ template<typename _Scalar, int _Dim>
 using ConstLinearMap =
 ConstFunctionnalMap< LinearEvalFunc< _Scalar, _Dim > >;
 
+template<typename _Scalar, int _Dim>
+using QuadraticForm =
+Functionnal< QuadraticFormEvalFunc< _Scalar, _Dim > >;
+
+template<typename _Scalar, int _Dim>
+using QuadraticFormMap =
+FunctionnalMap< QuadraticFormEvalFunc< _Scalar, _Dim > >;
+
+template<typename _Scalar, int _Dim>
+using ConstQuadraticFormMap =
+ConstFunctionnalMap< QuadraticFormEvalFunc< _Scalar, _Dim > >;
+
 
 
 // Polynomial typedefs
