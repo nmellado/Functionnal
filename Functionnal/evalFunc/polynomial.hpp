@@ -58,7 +58,7 @@ struct LinearEvalFunc {
     typedef Eigen::Matrix<Scalar, 1,     (Dim)> PType;
     typedef Eigen::Matrix<Scalar, 1,       1  > RType;
 
-    typedef void Derivative;
+    typedef ConstantEvalFunc<Scalar, Dim> Derivative;
 
 
     inline
@@ -99,7 +99,6 @@ struct LinearEvalFunc {
     {
         return getConstPMap(coeffs).dot(x) + getConstRMap(coeffs)(0);
     }
-
 };
 
 /*!
@@ -109,7 +108,7 @@ struct LinearEvalFunc {
  * \see https://en.wikipedia.org/wiki/Quadric
  */
 template <typename _Scalar, int _Dim >
-struct QuadricEvalFunc {
+struct GeneralizedQuadricEvalFunc {
 
     using Scalar = _Scalar;
     constexpr static const int Degree   = 2;
@@ -132,8 +131,7 @@ struct QuadricEvalFunc {
     typedef LinearEvalFunc< Scalar, Dim> Derivative;
 
 
-    inline
-    QuadricEvalFunc(){}
+    inline GeneralizedQuadricEvalFunc(){}
 
     static inline Eigen::Map<QType> getQMap(Eigen::Ref<CoeffType> coeffs) {
         return Eigen::Map<QType> (coeffs.data());
