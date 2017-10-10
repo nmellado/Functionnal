@@ -43,7 +43,7 @@ template <typename _Scalar, int _Dim >
 struct LinearEvalFunc {
 
     using Scalar = _Scalar;
-    constexpr static const int Degree   = 2;
+    constexpr static const int Degree   = 1;
     constexpr static const int Dim      = _Dim;
 
     constexpr static const int PSize    = (Dim);
