@@ -73,6 +73,7 @@ public:
     template <typename X>
     inline
     OutputVectorType operator() (const X& x) const{
+        assert(! x.array().isNaN().any());
         return eval(x);
     }
 
