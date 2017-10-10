@@ -70,13 +70,9 @@ public:
         return EvalBase::staticEval(Eigen::Map<const InputVectorType>(x.data()), coeffs);
     }
 
+    template <typename X>
     inline
-    OutputVectorType operator() (const InputVectorType& x) const{
-        return eval(x);
-    }
-
-    inline
-    OutputVectorType operator() (const std::array<Scalar, InputVectorType::SizeAtCompileTime> & x) const{
+    OutputVectorType operator() (const X& x) const{
         return eval(x);
     }
 
