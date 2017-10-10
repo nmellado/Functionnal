@@ -13,6 +13,27 @@
 
 namespace functionnal{
 
+template <typename _Scalar, int _Dim >
+struct ConstantEvalFunc {
+    using Scalar = _Scalar;
+    constexpr static const int Dim      = _Dim;
+    constexpr static const int Degree   = 0;
+    constexpr static const int NbCoeff  = 1;
+
+    typedef Eigen::Matrix<Scalar, Dim, 1> InputVectorType;
+    typedef Scalar OutputVectorType;
+    typedef Eigen::Matrix<Scalar, 1, NbCoeff> CoeffType;
+
+    inline ConstantEvalFunc(){}
+
+    static inline
+    OutputVectorType staticEval(const InputVectorType& /*x*/,
+                                const Eigen::Ref<const CoeffType>& coeffs)
+    {
+        return coeffs(0);
+    }
+};
+
 /*!
  * \brief Base class used to evaluate a n-dimensionnal linear function defined as
  * $ P x^\mathrm{T} + R = 0$
