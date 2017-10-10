@@ -80,10 +80,9 @@ public:
      * \brief Build and return the partial derivative of the Functionnal in
      * dimension Did
      */
-    template <int DId = 0>
     inline
-    Derivative derivative() const {
-        return Derivative(EvalBase::template staticDerivative<DId>(coeffs));
+    Derivative derivative(int DId = 0) const {
+        return Derivative(EvalBase::staticDerivative(coeffs, DId));
     }
 
 public:

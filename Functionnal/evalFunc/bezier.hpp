@@ -76,11 +76,10 @@ struct BezierEvalFunc{
         return recursiveCall(_Degree, 0, x(0), coeffs);
     }
 
-    template <int DId = 0>
     static inline
-    typename Derivative::CoeffType staticDerivative( const CoeffType& coeffs){
-        static_assert(DId == 0,
-                      "Bezier differentiation is defined only in parametric space. DId must be equal to 0");
+    typename Derivative::CoeffType staticDerivative( const CoeffType& coeffs,
+                                                     int DId){
+        assert(DId == 0);
         // coefficients are P_{i+1} - P{i}
         return    coeffs.template block<1, Derivative::NbCoeff>(0, 0).array()
                 - coeffs.template block<1, Derivative::NbCoeff>(0, Dim).array();
@@ -166,11 +165,11 @@ struct BezierBinomialEvalFunc{
      * \brief Build and return the partial derivative of the Functionnal in
      * dimension Did
      */
-    template <int DId = 0>
     static inline
-    typename Derivative::CoeffType staticDerivative( const CoeffType& coeffs){
+    typename Derivative::CoeffType staticDerivative( const CoeffType& coeffs,
+                                                     int DId = 0){
         // delegate computation to BezierEvalFunc
-        return BezierEvalFunc<Scalar, Degree, Dim>::template staticDerivative<DId>(coeffs);
+        return BezierEvalFunc<Scalar, Degree, Dim>::staticDerivative(coeffs, DId);
     }
 
     template <class StreamT>
