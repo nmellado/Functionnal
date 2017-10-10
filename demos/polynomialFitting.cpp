@@ -11,6 +11,7 @@
 #include <Eigen/Dense>
 #include <unsupported/Eigen/LevenbergMarquardt>
 #include <unsupported/Eigen/NumericalDiff>
+#include <Eigen/StdVector>
 
 #include "Functionnal/functionnal.h"
 
@@ -33,11 +34,21 @@ struct functor : Eigen::DenseFunctor<typename _FunctionMap::Scalar>
     using Base           = Eigen::DenseFunctor<Scalar>;
     using InputType      = typename Base::InputType;
     using ValueType      = typename Base::ValueType;
-    using JacobianSolver = typename Base::JacobianType;
+    using JacobianType   = typename Base::JacobianType;
     using QRSolver       = typename Base::QRSolver;
 
 
-    inline functor(int NbSamples) : Base(FunctionMap::nbCoeff(), NbSamples) { }
+    template <typename Container >
+    inline functor(const Container& samples_)
+        : Base(FunctionMap::nbCoeff(), samples_.size()),
+          samples(samples_)
+    { }
+
+
+    inline functor(const functor &other)
+        : Base(FunctionMap::nbCoeff(), other.samples.size()),
+          samples(other.samples)
+    { }
 
     inline int operator() (const InputType &x, ValueType &fvec) const {
         FunctionMap q(x.data());
@@ -56,14 +67,26 @@ struct functor : Eigen::DenseFunctor<typename _FunctionMap::Scalar>
         return 0;
     }
 
+//    inline int df(const InputType& _x, JacobianType &jac) const
+//    {
+//        FunctionMap q(_x.data());
+//        for(int d = 0; d < FunctionMap::dim(); ++d) {
+//            typename FunctionMap::Derivative der = q.derivative(d);
+//            der(_x, jac.row(d));
+//        }
+//    }
+
+protected:
+
 public:
-    std::vector<typename FunctionMap::InputVectorType> samples;
+    const std::vector<typename FunctionMap::InputVectorType,
+                      Eigen::aligned_allocator<typename FunctionMap::InputVectorType> >& samples;
     std::vector<Scalar> samplesValues;
 };
 
 
-template <typename Function, typename FunctionMap>
-void runFit( const std::vector<typename Function::InputVectorType>& samples,
+template <typename Function, typename FunctionMap, typename Container>
+void runFit( const Container& samples,
              const Function& targetFunction = Function()) {
 
     using Point =  typename Function::InputVectorType;
@@ -72,20 +95,23 @@ void runFit( const std::vector<typename Function::InputVectorType>& samples,
     // Create Eigen data structures
     using FunctorType = functor<FunctionMap>;
     using FunctorTypeWithAutoDiffs = Functor_w_df<FunctorType>;
-    FunctorTypeWithAutoDiffs fun(FunctorType (samples.size()), std::numeric_limits<Scalar>::epsilon());
+    FunctorTypeWithAutoDiffs fun(FunctorType (samples), 0.0001);
+//    FunctorType fun( samples );
 
-    fun.samples = samples;
+    fun.samplesValues.clear();
+    fun.samplesValues.reserve(samples.size());
 
     // Generate Input values and samples:
     // - random sampling in 10 dimension
     // - value computed by targetFunction
-    for (const auto& p : fun.samples)
+    for (int i = 0; i < samples.size(); ++i)
     {
-        fun.samplesValues.push_back( targetFunction(p) );
+        fun.samplesValues.push_back( targetFunction(samples[i]) );
     }
 
     // prepare solver
     Eigen::LevenbergMarquardt<FunctorTypeWithAutoDiffs> lm(fun);
+//    Eigen::LevenbergMarquardt<FunctorType> lm(fun);
 
     // init problem
     Eigen::Matrix<Scalar, Eigen::Dynamic, 1> coeffs(Function::nbCoeff(), 1);
@@ -131,7 +157,8 @@ void run(int nbSamples) {
     using QuadraticForm = functionnal::QuadraticForm < Scalar, Dim>;
     using QuadraticFormMap = functionnal::ConstQuadraticFormMap < Scalar, Dim>;
 
-    std::vector<typename Quadric::InputVectorType> samples;
+    std::vector<typename Quadric::InputVectorType,
+                Eigen::aligned_allocator<typename Quadric::InputVectorType> > samples;
     samples.resize(nbSamples);
 
     // Generate Input values and samples:
@@ -162,12 +189,12 @@ int main(int, char **)
 {
     using namespace std;
 
-    std::cout << "# 2D" << std::endl;
-    run<2>(10000);
+    std::cout << "# 1D" << std::endl;
+    run<2>(1000);
     std::cout << "# 3D" << std::endl;
-    run<3>(1000);
-    std::cout << "# 10D" << std::endl;
-    run<10>(1000);
+    run<3>(10000);
+    std::cout << "# 7D" << std::endl;
+    run<7>(10000);
 
     return EXIT_SUCCESS;
 }
