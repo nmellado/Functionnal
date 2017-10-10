@@ -187,4 +187,59 @@ struct QuadricEvalFunc {
 
 };
 
+/*!
+ * \brief Base class used to evaluate a n-dimensionnal quadratic form, defined
+ * as $x Q x^\mathrm{T} = 0$ with $X = {x_1, ..., x_{n+1}}$
+ * \see https://en.wikipedia.org/wiki/Quadratic_form
+ */
+template <typename _Scalar, int _Dim >
+struct QuadraticFormEvalFunc {
+
+    using Scalar = _Scalar;
+    constexpr static const int Degree   = 2;
+    constexpr static const int Dim      = _Dim;
+
+    constexpr static const int QSize    = (Dim)*(Dim);
+
+    constexpr static const int NbCoeff  = QSize;
+
+    typedef Eigen::Matrix<Scalar, Dim, 1> InputVectorType;
+    typedef Scalar OutputVectorType;
+    typedef Eigen::Matrix<Scalar, 1, NbCoeff> CoeffType;
+
+    typedef Eigen::Matrix<Scalar, (Dim), (Dim)> QType;
+
+    typedef LinearEvalFunc< Scalar, Dim> Derivative;
+
+
+    inline QuadraticFormEvalFunc(){}
+
+    static inline Eigen::Map<QType> getQMap(Eigen::Ref<CoeffType> coeffs) {
+        return Eigen::Map<QType> (coeffs.data());
+    }
+
+    static inline Eigen::Map<const QType> getConstQMap(const Eigen::Ref<const CoeffType> coeffs) {
+        return Eigen::Map<const QType> (coeffs.data());
+    }
+
+    /*!
+     * \brief Init the quadric as \f$f(x) = x\f$
+     * \param coeffs
+     */
+    static void initCoeffs (Eigen::Ref<CoeffType> coeffs,
+                            Eigen::Ref<const QType> q = QType::Identity())
+    {
+        getQMap(coeffs) = q;
+    }
+
+
+    static inline
+    OutputVectorType staticEval(const InputVectorType& x,
+                                const Eigen::Ref<const CoeffType>& coeffs)
+    {
+        return (x.transpose()*getConstQMap(coeffs)).dot(x);
+    }
+
+};
+
 }
