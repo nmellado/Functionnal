@@ -41,14 +41,17 @@ private:
 
     //! This type defines the coefficient types that will be optimized
     typedef _EvalFuncT< _Scalar, _Degree-2, _Dim> ConstrainedEvalBase;
-
-public:
-    typedef typename EvalBase::Scalar Scalar;
+protected:
     enum{
         Dim     = EvalBase::Dim,
         NbCoeff = ConstrainedEvalBase::NbCoeff,
         Degree  = EvalBase::Degree
     };
+public:
+    typedef typename EvalBase::Scalar Scalar;
+    static constexpr int nbCoeff() { return NbCoeff; }
+    static constexpr int dim() { return Dim; }
+    static constexpr int degree() { return Degree; }
 
     typedef typename EvalBase::InputVectorType InputVectorType;
     typedef typename EvalBase::OutputVectorType OutputVectorType;
